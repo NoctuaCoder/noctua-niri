@@ -1,0 +1,85 @@
+/* Noctua-Niri Waybar Styling */
+
+* {
+    font-family: "JetBrainsMono Nerd Font", "Inter", sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    min-height: 0;
+}
+
+window#waybar {
+    background-color: rgba(30, 30, 46, 0.85);
+    border-bottom: 2px solid rgba(203, 166, 247, 0.3);
+    color: #cdd6f4;
+    transition-property: background-color;
+    transition-duration: .3s;
+}
+
+#custom-launcher {
+    background-color: #89b4fa;
+    color: #1e1e2e;
+    padding: 0 12px;
+    margin: 4px 4px 4px 8px;
+    border-radius: 8px;
+    font-size: 16px;
+}
+
+#workspaces button {
+    padding: 0 8px;
+    color: #bac2de;
+    border-radius: 6px;
+    margin: 4px 2px;
+    background: transparent;
+    transition: all 0.2s ease;
+}
+
+#workspaces button:hover {
+    background: rgba(137, 180, 250, 0.2);
+    color: #89b4fa;
+}
+
+#workspaces button.focused {
+    background-color: #cba6f7;
+    color: #1e1e2e;
+    font-weight: bold;
+}
+
+#window {
+    color: #9399b2;
+    padding-left: 8px;
+    font-style: italic;
+}
+
+#clock {
+    background-color: rgba(49, 50, 68, 0.6);
+    color: #fab387;
+    padding: 0 12px;
+    margin: 4px 0;
+    border-radius: 8px;
+    border: 1px solid rgba(250, 179, 135, 0.2);
+}
+
+#pulseaudio, #network, #battery, #tray {
+    background-color: rgba(49, 50, 68, 0.6);
+    color: #a6e3a1;
+    padding: 0 10px;
+    margin: 4px 2px;
+    border-radius: 8px;
+}
+
+#battery.warning {
+    color: #f9e2af;
+}
+
+#battery.critical {
+    color: #f38ba8;
+}
+
+#custom-power {
+    background-color: #f38ba8;
+    color: #1e1e2e;
+    padding: 0 10px;
+    margin: 4px 8px 4px 4px;
+    border-radius: 8px;
+    font-size: 14px;
+}
