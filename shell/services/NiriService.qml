@@ -3,27 +3,28 @@ import Quickshell
 import Quickshell.Io
 import QtQuick
 
-// Serviço para interface com o compositor Niri usando niri msg
 QtObject {
     id: root
 
     property var workspaces: []
     property var activeWorkspace: null
 
-    function updateState() {
+    function fetchWorkspaces() {
         workspacesProcess.running = true
     }
 
+    // Processo único para buscar estado inicial
     Process {
         id: workspacesProcess
         command: ["niri", "msg", "-j", "workspaces"]
         stdout: SplitParser {
             onRead: data => {
                 try {
-                    root.workspaces = JSON.parse(data)
-                    for (var i = 0; i < root.workspaces.length; i++) {
-                        if (root.workspaces[i].is_active) {
-                            root.activeWorkspace = root.workspaces[i]
+                    let parsed = JSON.parse(data)
+                    root.workspaces = parsed
+                    for (let i = 0; i < parsed.length; i++) {
+                        if (parsed[i].is_active) {
+                            root.activeWorkspace = parsed[i]
                             break
                         }
                     }
@@ -34,7 +35,27 @@ QtObject {
         }
     }
 
+    // Processo contínuo para escutar o event-stream do Niri em tempo real
+    Process {
+        id: eventStreamProcess
+        command: ["niri", "msg", "-j", "event-stream"]
+        running: true
+        stdout: SplitParser {
+            onRead: data => {
+                try {
+                    let event = JSON.parse(data)
+                    // Sempre que houver mudança de workspace ou foco, atualizamos
+                    if (event.WorkspaceActivated || event.WorkspacesChanged || event.WindowFocusChanged) {
+                        root.fetchWorkspaces()
+                    }
+                } catch (e) {
+                    // Ignora linhas parciais ou vazias
+                }
+            }
+        }
+    }
+
     Component.onCompleted: {
-        updateState()
+        root.fetchWorkspaces()
     }
 }

@@ -1,0 +1,9 @@
+# Backup files
+*.bak
+*.swp
+*~
+
+# Cache and build artifacts
+*.qmlc
+qmlcache/
+.cache/

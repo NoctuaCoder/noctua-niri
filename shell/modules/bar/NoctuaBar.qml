@@ -1,11 +1,12 @@
 import Quickshell
+import Quickshell.Io
 import QtQuick
 import QtQuick.Layouts
+import "../../services"
 
 Scope {
     id: root
 
-    // Painel flutuante superior com estilo Glassmorphism supremo
     Variants {
         model: Quickshell.screens
         delegate: PanelWindow {
@@ -26,19 +27,18 @@ Scope {
             Rectangle {
                 anchors.fill: parent
                 color: "#1e1e2e"
-                opacity: 0.75
+                opacity: 0.85
                 radius: 16
                 border.width: 1
-                border.color: "#cba6f7" // Gradiente/Borda Catppuccin Mauve
+                border.color: "#cba6f7"
 
-                // Conteúdo da barra
                 RowLayout {
                     anchors.fill: parent
                     anchors.leftMargin: 16
                     anchors.rightMargin: 16
-                    spacing: 12
+                    spacing: 16
 
-                    // Logo / Launcher button
+                    // Launcher icon
                     Text {
                         text: ""
                         font.family: "JetBrainsMono Nerd Font"
@@ -46,19 +46,46 @@ Scope {
                         color: "#89b4fa"
                     }
 
-                    Text {
-                        text: "Noctua-Niri"
-                        font.family: "JetBrainsMono Nerd Font"
-                        font.bold: true
-                        font.pixelSize: 13
-                        color: "#cdd6f4"
+                    // Workspaces dinâmicos do Niri
+                    RowLayout {
+                        spacing: 6
+                        Repeater {
+                            model: NiriService.workspaces
+                            delegate: Rectangle {
+                                width: 24
+                                height: 24
+                                radius: 6
+                                color: modelData.is_active ? "#cba6f7" : "#313244"
+                                border.width: 1
+                                border.color: modelData.is_active ? "#f5e0dc" : "#45475a"
+
+                                Text {
+                                    anchors.centerIn: parent
+                                    text: modelData.idx
+                                    font.family: "JetBrainsMono Nerd Font"
+                                    font.pixelSize: 12
+                                    font.bold: true
+                                    color: modelData.is_active ? "#1e1e2e" : "#cdd6f4"
+                                }
+
+                                MouseArea {
+                                    anchors.fill: parent
+                                    onClicked: {
+                                        wsProcess.command = ["niri", "msg", "action", "focus-workspace", modelData.idx.toString()]
+                                        wsProcess.running = true
+                                    }
+                                }
+                            }
+                        }
                     }
+
+                    Process { id: wsProcess }
 
                     Item { Layout.fillWidth: true }
 
-                    // Relógio central com estética neon pastel
+                    // Relógio central neon pastel
                     Rectangle {
-                        Layout.preferredWidth: 120
+                        Layout.preferredWidth: 110
                         Layout.preferredHeight: 28
                         color: "#313244"
                         radius: 8
@@ -84,20 +111,42 @@ Scope {
 
                     Item { Layout.fillWidth: true }
 
-                    // Indicador de Status / Bateria / Audio
+                    // Status reais (Áudio e Bateria)
                     RowLayout {
-                        spacing: 8
-                        Text {
-                            text: "󰖩 Conectado"
-                            font.family: "JetBrainsMono Nerd Font"
-                            font.pixelSize: 12
-                            color: "#a6e3a1"
+                        spacing: 12
+
+                        // Audio
+                        RowLayout {
+                            spacing: 4
+                            Text {
+                                text: AudioService.muted ? "󰝟" : "󰕾"
+                                font.family: "JetBrainsMono Nerd Font"
+                                font.pixelSize: 14
+                                color: "#a6e3a1"
+                            }
+                            Text {
+                                text: AudioService.volume + "%"
+                                font.family: "JetBrainsMono Nerd Font"
+                                font.pixelSize: 12
+                                color: "#cdd6f4"
+                            }
                         }
-                        Text {
-                            text: "󰕾 80%"
-                            font.family: "JetBrainsMono Nerd Font"
-                            font.pixelSize: 12
-                            color: "#89b4fa"
+
+                        // Battery
+                        RowLayout {
+                            spacing: 4
+                            Text {
+                                text: "󰁹"
+                                font.family: "JetBrainsMono Nerd Font"
+                                font.pixelSize: 14
+                                color: "#89b4fa"
+                            }
+                            Text {
+                                text: BatteryService.capacity + "%"
+                                font.family: "JetBrainsMono Nerd Font"
+                                font.pixelSize: 12
+                                color: "#cdd6f4"
+                            }
                         }
                     }
                 }

@@ -7,7 +7,10 @@ import "services"
 import "modules/bar"
 
 ShellRoot {
-    NiriService { id: niriService }
+    NiriService   { id: niriService }
+    AudioService  { id: audioService }
+    BatteryService{ id: batteryService }
+
     NoctuaBar {}
 
     Component.onCompleted: {
