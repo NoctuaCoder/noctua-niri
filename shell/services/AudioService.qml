@@ -13,12 +13,15 @@ QtObject {
         volProcess.running = true
     }
 
+    function toggleMute() {
+        volToggleProcess.running = true
+    }
+
     Process {
         id: volProcess
         command: ["wpctl", "get-volume", "@DEFAULT_AUDIO_SINK@"]
         stdout: SplitParser {
             onRead: data => {
-                // Exemplo de saída: "Volume: 0.75 [MUTED]" ou "Volume: 0.75"
                 let parts = data.trim().split(" ")
                 if (parts.length >= 2) {
                     let volFloat = parseFloat(parts[1])
@@ -29,8 +32,14 @@ QtObject {
         }
     }
 
+    Process {
+        id: volToggleProcess
+        command: ["wpctl", "set-mute", "@DEFAULT_AUDIO_SINK@", "toggle"]
+        onExited: root.updateVolume()
+    }
+
     Timer {
-        interval: 2000
+        interval: 3000
         running: true
         repeat: true
         onTriggered: root.updateVolume()

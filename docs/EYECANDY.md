@@ -6,13 +6,11 @@ Se você quer transformar sua área de trabalho em uma verdadeira obra de arte d
 
 ## 🎨 O Conceito Visual
 
-1. **Floating Glassmorphism Bar**: A barra superior abandona o visual monolítico tradicional e flutua elegantemente sobre o wallpaper com bordas arredondadas (`radius: 16`), efeito translúcido em vidro fumê (`#1e1e2e` com 75% de opacidade) e acentos em tons pastéis Catppuccin Mocha.
-2. **Animações Físicas com Molas (Spring Physics)**: Cada abertura de janela, transição de workspace e exibição de widgets responde com constantes de mola reais, criando uma sensação tátil orgânica.
-3. **Paleta de Cores Coesa**:
-   - **Fundo**: `#1e1e2e` (Dark Void)
-   - **Destaque Principal**: `#cba6f7` (Mauve Neon)
-   - **Atalhos / Relógio**: `#fab387` (Peach Pastel)
-   - **Sucesso / Conexão**: `#a6e3a1` (Green Mint)
+1. **Floating Glassmorphism Bar**: A barra superior flutua elegantemente sobre o wallpaper com cantos arredondados (`radius: 16`), efeito translúcido em vidro fumê (`#1e1e2e` com 88% de opacidade) e acentos em tons pastéis Catppuccin Mocha.
+2. **Quickshell Reativo e Inteligente**: 
+   - **NiriService**: Comunicação em tempo real via `niri msg event-stream` para rastreamento instantâneo de workspaces.
+   - **AudioService & BatteryService**: Leitura síncrona de volume via `wpctl` (com suporte a clique para mute) e detecção dinâmica de bateria (compatível com notebooks e desktops).
+3. **Animações Físicas com Molas (Spring Physics)**: Cada abertura de janela, transição de workspace e efeito de *hover* na barra responde com constantes de mola e transições suaves.
 
 ---
 
@@ -22,10 +20,12 @@ Se você quer transformar sua área de trabalho em uma verdadeira obra de arte d
 shell/
 ├── shell.qml               # Gerenciador raiz do Quickshell
 ├── services/
-│   └── NiriService.qml     # Comunicação assíncrona em tempo real com niri msg
+│   ├── NiriService.qml     # Serviço reativo baseado em event-stream
+│   ├── AudioService.qml    # Controle e monitoramento de áudio (wpctl)
+│   └── BatteryService.qml  # Detecção dinâmica de bateria
 └── modules/
     └── bar/
-        └── NoctuaBar.qml   # Barra flutuante com glassmorphism e relógio reativo
+        └── NoctuaBar.qml   # Barra flutuante com glassmorphism, relógio e workspaces clicáveis
 ```
 
 ---

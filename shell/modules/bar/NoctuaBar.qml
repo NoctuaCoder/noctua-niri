@@ -27,7 +27,7 @@ Scope {
             Rectangle {
                 anchors.fill: parent
                 color: "#1e1e2e"
-                opacity: 0.85
+                opacity: 0.88
                 radius: 16
                 border.width: 1
                 border.color: "#cba6f7"
@@ -46,18 +46,23 @@ Scope {
                         color: "#89b4fa"
                     }
 
-                    // Workspaces dinâmicos do Niri
+                    // Workspaces dinâmicos do Niri com Hover e Feedback Visual
                     RowLayout {
                         spacing: 6
                         Repeater {
                             model: NiriService.workspaces
                             delegate: Rectangle {
-                                width: 24
-                                height: 24
-                                radius: 6
-                                color: modelData.is_active ? "#cba6f7" : "#313244"
+                                id: wsRect
+                                width: 26
+                                height: 26
+                                radius: 8
+                                color: modelData.is_active ? "#cba6f7" : (wsMouse.containsMouse ? "#313244" : "transparent")
                                 border.width: 1
                                 border.color: modelData.is_active ? "#f5e0dc" : "#45475a"
+
+                                behavior on color {
+                                    ColorAnimation { duration: 150 }
+                                }
 
                                 Text {
                                     anchors.centerIn: parent
@@ -69,7 +74,9 @@ Scope {
                                 }
 
                                 MouseArea {
+                                    id: wsMouse
                                     anchors.fill: parent
+                                    hoverEnabled: true
                                     onClicked: {
                                         wsProcess.command = ["niri", "msg", "action", "focus-workspace", modelData.idx.toString()]
                                         wsProcess.running = true
@@ -111,18 +118,18 @@ Scope {
 
                     Item { Layout.fillWidth: true }
 
-                    // Status reais (Áudio e Bateria)
+                    // Status reais (Áudio interativo e Bateria dinâmica)
                     RowLayout {
-                        spacing: 12
+                        spacing: 14
 
-                        // Audio
+                        // Audio com clique para Mute
                         RowLayout {
                             spacing: 4
                             Text {
                                 text: AudioService.muted ? "󰝟" : "󰕾"
                                 font.family: "JetBrainsMono Nerd Font"
                                 font.pixelSize: 14
-                                color: "#a6e3a1"
+                                color: AudioService.muted ? "#f38ba8" : "#a6e3a1"
                             }
                             Text {
                                 text: AudioService.volume + "%"
@@ -130,11 +137,17 @@ Scope {
                                 font.pixelSize: 12
                                 color: "#cdd6f4"
                             }
+
+                            MouseArea {
+                                anchors.fill: parent
+                                onClicked: AudioService.toggleMute()
+                            }
                         }
 
-                        // Battery
+                        // Battery (Apenas se houver bateria detectada)
                         RowLayout {
                             spacing: 4
+                            visible: BatteryService.hasBattery
                             Text {
                                 text: "󰁹"
                                 font.family: "JetBrainsMono Nerd Font"

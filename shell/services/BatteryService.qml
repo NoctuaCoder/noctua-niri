@@ -8,14 +8,34 @@ QtObject {
 
     property int capacity: 100
     property bool charging: false
+    property bool hasBattery: false
+    property string batteryPath: ""
 
-    function updateBattery() {
-        batProcess.running = true
+    function checkBattery() {
+        batDetectProcess.running = true
+    }
+
+    // Detecta automaticamente se existe BAT0, BAT1, etc. em /sys/class/power_supply/
+    Process {
+        id: batDetectProcess
+        command: ["sh", "-c", "for b in /sys/class/power_supply/BAT*; do [ -d \"$b\" ] && echo \"$b\" && break; done"]
+        stdout: SplitParser {
+            onRead: data => {
+                let path = data.trim()
+                if (path !== "") {
+                    root.batteryPath = path
+                    root.hasBattery = true
+                    batCapacityProcess.command = ["cat", path + "/capacity"]
+                    batCapacityProcess.running = true
+                } else {
+                    root.hasBattery = false
+                }
+            }
+        }
     }
 
     Process {
-        id: batProcess
-        command: ["cat", "/sys/class/power_supply/BAT0/capacity"]
+        id: batCapacityProcess
         stdout: SplitParser {
             onRead: data => {
                 let val = parseInt(data.trim())
@@ -25,13 +45,17 @@ QtObject {
     }
 
     Timer {
-        interval: 10000
+        interval: 15000
         running: true
         repeat: true
-        onTriggered: root.updateBattery()
+        onTriggered: {
+            if (root.hasBattery && root.batteryPath !== "") {
+                batCapacityProcess.running = true
+            }
+        }
     }
 
     Component.onCompleted: {
-        root.updateBattery()
+        root.checkBattery()
     }
 }
