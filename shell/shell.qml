@@ -5,15 +5,19 @@
 import Quickshell
 import "services"
 import "modules/bar"
+import "modules/sidebar"
 
 ShellRoot {
-    NiriService   { id: niriService }
-    AudioService  { id: audioService }
-    BatteryService{ id: batteryService }
+    NiriService           { id: niriService }
+    AudioService          { id: audioService }
+    BatteryService        { id: batteryService }
+    SystemMonitorService  { id: systemMonitorService }
+    NetworkService        { id: networkService }
 
-    NoctuaBar {}
+    NoctuaBar             {}
+    NoctuaDashboard       {}
 
     Component.onCompleted: {
-        console.log("Noctua-Niri Eye-Candy Quickshell initialized successfully.")
+        console.log("Noctua-Niri Eye-Candy Quickshell (with Dashboard) initialized successfully.")
     }
 }
