@@ -1,14 +1,14 @@
-# Noctua-Niri 🌌 (Caffyne-Style Edition)
+# Noctua-Niri 🌌 (Prime Edition)
 
-Uma suíte de dotfiles moderna, elegante e de alta performance construída para o **Niri** — o compositor Wayland com rolagem infinita de colunas (*scrollable-tiling*). Inspirada na sofisticação visual do **Caffyne Shell**, esta edição traz componentes modulares em QML, arquitetura de configuração externa via JSON, painel lateral de telemetria e estética Catppuccin Mocha.
+Uma suíte de dotfiles soberana, elegante e de alta performance construída exclusivamente para o **Niri** — o compositor Wayland com rolagem infinita de colunas (*scrollable-tiling*). O **Noctua-Niri** redefine o padrão de excelência no Linux, combinando componentes modulares em QML, arquitetura de configuração externa via JSON, painel lateral de telemetria em tempo real e a estética exclusiva Catppuccin Mocha.
 
 ---
 
-## 💎 Arquitetura e Diferenciais
+## 💎 Arquitetura e Diferenciais Soberanos
 
 1. **Configuração Externa (`theme.json`)**:
-   - Centraliza cores, opacidades, raios de borda e fontes. Personalize toda a shell sem tocar em uma única linha de código QML.
-2. **Biblioteca de Componentes (`shell/components/`)**:
+   - Centraliza cores, opacidades, raios de borda e fontes. Personalize toda a shell de forma instantânea sem tocar em códigos QML.
+2. **Biblioteca de Componentes Nativos (`shell/components/`)**:
    - `NoctuaCard.qml`: Cartões com glassmorphism avançado, bordas reativas ao hover e opacidade dinâmica.
    - `NoctuaButton.qml`: Botões interativos com transições suaves de cor e ícones integrados.
 3. **NoctuaBar & NoctuaDashboard**:

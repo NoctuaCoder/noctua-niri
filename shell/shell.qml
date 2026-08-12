@@ -1,5 +1,5 @@
 // ============================================================================
-// Noctua-Niri Shell — Quickshell Configuration (Caffyne-Style Edition)
+// Noctua-Niri Shell — Quickshell Configuration (Prime Edition)
 // ============================================================================
 
 import Quickshell
@@ -21,6 +21,6 @@ ShellRoot {
     NoctuaDashboard       {}
 
     Component.onCompleted: {
-        console.log("Noctua-Niri Caffyne-Style Shell (with ConfigService) initialized successfully.")
+        console.log("Noctua-Niri Prime Shell (with ConfigService) initialized successfully.")
     }
 }

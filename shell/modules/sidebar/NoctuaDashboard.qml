@@ -24,10 +24,10 @@ Scope {
 
             NoctuaCard {
                 anchors.fill: parent
-                cardColor: "#1e1e2e"
-                borderColor: "#cba6f7"
-                cardOpacity: 0.92
-                cardRadius: 20
+                cardColor: ConfigService.background
+                borderColor: ConfigService.accent
+                cardOpacity: ConfigService.shellOpacity
+                cardRadius: ConfigService.shellRadius
                 hoverEffect: false
 
                 ColumnLayout {
@@ -42,16 +42,16 @@ Scope {
                             width: 42
                             height: 42
                             radius: 14
-                            color: "#313244"
+                            color: ConfigService.surface
                             border.width: 1
-                            border.color: "#89b4fa"
+                            border.color: ConfigService.blue
 
                             Text {
                                 anchors.centerIn: parent
                                 text: ""
-                                font.family: "JetBrainsMono Nerd Font"
+                                font.family: ConfigService.fontFamily
                                 font.pixelSize: 22
-                                color: "#89b4fa"
+                                color: ConfigService.blue
                             }
                         }
 
@@ -59,16 +59,16 @@ Scope {
                             spacing: 2
                             Text {
                                 text: "Noctua-Niri"
-                                font.family: "JetBrainsMono Nerd Font"
+                                font.family: ConfigService.fontFamily
                                 font.bold: true
                                 font.pixelSize: 16
-                                color: "#cdd6f4"
+                                color: ConfigService.text
                             }
                             Text {
-                                text: "Caffyne-Style Edition"
-                                font.family: "JetBrainsMono Nerd Font"
+                                text: "Prime Edition"
+                                font.family: ConfigService.fontFamily
                                 font.pixelSize: 11
-                                color: "#fab387"
+                                color: ConfigService.peach
                             }
                         }
                     }
@@ -76,16 +76,16 @@ Scope {
                     Rectangle {
                         Layout.fillWidth: true
                         height: 1
-                        color: "#313244"
+                        color: ConfigService.surface
                     }
 
                     // Seção de System Monitor
                     Text {
                         text: "System Telemetry"
-                        font.family: "JetBrainsMono Nerd Font"
+                        font.family: ConfigService.fontFamily
                         font.bold: true
                         font.pixelSize: 13
-                        color: "#fab387"
+                        color: ConfigService.peach
                     }
 
                     // CPU Usage
@@ -94,20 +94,20 @@ Scope {
                         spacing: 6
                         RowLayout {
                             Layout.fillWidth: true
-                            Text { text: "󰻠 CPU Cores"; font.family: "JetBrainsMono Nerd Font"; font.pixelSize: 12; color: "#cdd6f4" }
+                            Text { text: "󰻠 CPU Cores"; font.family: ConfigService.fontFamily; font.pixelSize: 12; color: ConfigService.text }
                             Item { Layout.fillWidth: true }
-                            Text { text: SystemMonitorService.cpuUsage + "%"; font.family: "JetBrainsMono Nerd Font"; font.bold: true; font.pixelSize: 12; color: "#89b4fa" }
+                            Text { text: SystemMonitorService.cpuUsage + "%"; font.family: ConfigService.fontFamily; font.bold: true; font.pixelSize: 12; color: ConfigService.blue }
                         }
                         Rectangle {
                             Layout.fillWidth: true
                             height: 8
                             radius: 4
-                            color: "#313244"
+                            color: ConfigService.surface
                             Rectangle {
                                 width: parent.width * (SystemMonitorService.cpuUsage / 100)
                                 height: parent.height
                                 radius: 4
-                                color: "#89b4fa"
+                                color: ConfigService.blue
 
                                 Behavior on width {
                                     NumberAnimation { duration: 300; easing.type: Easing.OutQuad }
@@ -122,20 +122,20 @@ Scope {
                         spacing: 6
                         RowLayout {
                             Layout.fillWidth: true
-                            Text { text: "󰍛 Memory"; font.family: "JetBrainsMono Nerd Font"; font.pixelSize: 12; color: "#cdd6f4" }
+                            Text { text: "󰍛 Memory"; font.family: ConfigService.fontFamily; font.pixelSize: 12; color: ConfigService.text }
                             Item { Layout.fillWidth: true }
-                            Text { text: SystemMonitorService.ramUsage + "%"; font.family: "JetBrainsMono Nerd Font"; font.bold: true; font.pixelSize: 12; color: "#cba6f7" }
+                            Text { text: SystemMonitorService.ramUsage + "%"; font.family: ConfigService.fontFamily; font.bold: true; font.pixelSize: 12; color: ConfigService.accent }
                         }
                         Rectangle {
                             Layout.fillWidth: true
                             height: 8
                             radius: 4
-                            color: "#313244"
+                            color: ConfigService.surface
                             Rectangle {
                                 width: parent.width * (SystemMonitorService.ramUsage / 100)
                                 height: parent.height
                                 radius: 4
-                                color: "#cba6f7"
+                                color: ConfigService.accent
 
                                 Behavior on width {
                                     NumberAnimation { duration: 300; easing.type: Easing.OutQuad }
@@ -150,25 +150,25 @@ Scope {
                         spacing: 6
                         RowLayout {
                             Layout.fillWidth: true
-                            Text { text: "󰋊 Root Storage"; font.family: "JetBrainsMono Nerd Font"; font.pixelSize: 12; color: "#cdd6f4" }
+                            Text { text: "󰋊 Root Storage"; font.family: ConfigService.fontFamily; font.pixelSize: 12; color: ConfigService.text }
                             Item { Layout.fillWidth: true }
-                            Text { text: SystemMonitorService.diskUsage; font.family: "JetBrainsMono Nerd Font"; font.bold: true; font.pixelSize: 12; color: "#a6e3a1" }
+                            Text { text: SystemMonitorService.diskUsage; font.family: ConfigService.fontFamily; font.bold: true; font.pixelSize: 12; color: ConfigService.green }
                         }
                     }
 
                     Rectangle {
                         Layout.fillWidth: true
                         height: 1
-                        color: "#313244"
+                        color: ConfigService.surface
                     }
 
                     // Quick Actions
                     Text {
                         text: "Quick Toggles"
-                        font.family: "JetBrainsMono Nerd Font"
+                        font.family: ConfigService.fontFamily
                         font.bold: true
                         font.pixelSize: 13
-                        color: "#fab387"
+                        color: ConfigService.peach
                     }
 
                     GridLayout {
@@ -200,10 +200,10 @@ Scope {
                     RowLayout {
                         Layout.alignment: Qt.AlignHCenter
                         Text {
-                            text: "Noctua-Niri • Caffyne Architecture"
-                            font.family: "JetBrainsMono Nerd Font"
+                            text: "Noctua-Niri • Sovereign Shell"
+                            font.family: ConfigService.fontFamily
                             font.pixelSize: 10
-                            color: "#6c7086"
+                            color: ConfigService.subtext
                         }
                     }
                 }
