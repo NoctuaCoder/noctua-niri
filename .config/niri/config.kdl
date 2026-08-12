@@ -139,7 +139,8 @@ window-rule {
 binds {
     // General shortcuts
     Mod+Return { spawn "kitty"; }
-    Mod+Space { spawn "fuzzel"; }
+    Mod+Space { spawn "sh" "-c" "touch /tmp/noctua_toggle"; }
+    Mod       { spawn "sh" "-c" "touch /tmp/noctua_toggle"; }
     Mod+Q { close-window; }
     Mod+Shift+E { quit; }
     Mod+Alt+L { spawn "swaylock"; }

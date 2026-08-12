@@ -17,13 +17,35 @@ Scope {
         }
     }
 
+    // Monitora um arquivo de sinalização em /tmp/noctua-launcher-toggle para abrir/fechar instantaneamente
+    Timer {
+        interval: 100
+        running: true
+        repeat: true
+        triggeredOnStart: false
+        onTriggered: {
+            checkProc.running = true
+        }
+    }
+
+    Process {
+        id: checkProc
+        command: ["sh", "-c", "if [ -f /tmp/noctua_toggle ]; then rm /tmp/noctua_toggle && echo 'TOGGLE'; fi"]
+        stdout: SplitParser {
+            onRead: data => {
+                if (data.trim() === "TOGGLE") {
+                    root.toggle()
+                }
+            }
+        }
+    }
+
     QtObject {
         id: appService
         property var allApps: []
         property var filteredApps: []
 
         function loadApps() {
-            // Script simples para listar arquivos .desktop comuns no Linux
             appsProc.running = true
         }
 
@@ -48,13 +70,12 @@ Scope {
                     let parts = lines[i].split("|")
                     if (parts.length >= 2) {
                         let name = parts[0].trim()
-                        let exec = parts[1].trim().split(" ")[0] // Pega o binário principal
+                        let exec = parts[1].trim().split(" ")[0]
                         if (name && exec && !name.includes("%")) {
                             list.push({ name: name, exec: exec })
                         }
                     }
                 }
-                // Remover duplicatas por nome
                 let unique = []
                 let seen = {}
                 for (let i = 0; i < list.length; i++) {
@@ -99,7 +120,6 @@ Scope {
                     anchors.margins: 20
                     spacing: 16
 
-                    // Barra de pesquisa
                     Rectangle {
                         Layout.fillWidth: true
                         height: 46
@@ -151,7 +171,6 @@ Scope {
                         }
                     }
 
-                    // Lista de aplicativos
                     ListView {
                         id: appListView
                         Layout.fillWidth: true
