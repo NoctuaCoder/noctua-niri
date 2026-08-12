@@ -1,16 +1,16 @@
 // ============================================================================
-// Noctua-Niri Shell — Quickshell Configuration
+// Noctua-Niri Shell — Quickshell Configuration (Eye-Candy Edition)
 // ============================================================================
 
 import Quickshell
 import "services"
+import "modules/bar"
 
 ShellRoot {
-    // ── Global services ───────────────────────────────────────────────────────
     NiriService { id: niriService }
+    NoctuaBar {}
 
-    // ── Background daemon or notifications placeholder ────────────────────────
     Component.onCompleted: {
-        console.log("Noctua-Niri Quickshell initialized successfully.")
+        console.log("Noctua-Niri Eye-Candy Quickshell initialized successfully.")
     }
 }
