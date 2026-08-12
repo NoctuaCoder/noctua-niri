@@ -1,6 +1,6 @@
 # Noctua-Niri 🌌 (Prime Edition)
 
-Uma suíte de dotfiles soberana, elegante e de alta performance construída exclusivamente para o **Niri** — o compositor Wayland com rolagem infinita de colunas (*scrollable-tiling*). O **Noctua-Niri** redefine o padrão de excelência no Linux, combinando componentes modulares em QML, arquitetura de configuração externa via JSON, painel lateral de telemetria em tempo real e a estética exclusiva Catppuccin Mocha.
+Uma suíte de dotfiles soberana, elegante e de alta performance construída exclusivamente para o **Niri** — o compositor Wayland com rolagem infinita de colunas (*scrollable-tiling*). O **Noctua-Niri** redefine o padrão de excelência no Linux, combinando componentes modulares em QML, arquitetura de configuração externa via JSON, painel lateral de telemetria em tempo real, **NoctuaLauncher nativo** e a estética exclusiva Catppuccin Mocha.
 
 ---
 
@@ -11,9 +11,10 @@ Uma suíte de dotfiles soberana, elegante e de alta performance construída excl
 2. **Biblioteca de Componentes Nativos (`shell/components/`)**:
    - `NoctuaCard.qml`: Cartões com glassmorphism avançado, bordas reativas ao hover e opacidade dinâmica.
    - `NoctuaButton.qml`: Botões interativos com transições suaves de cor e ícones integrados.
-3. **NoctuaBar & NoctuaDashboard**:
-   - Barra superior flutuante com relógio dinâmico, workspaces clicáveis e indicadores de áudio/bateria/rede.
-   - Painel lateral flutuante com telemetria em tempo real (CPU, RAM, Disco) e animações de suavização (*easing*).
+3. **Módulos de Shell Soberanos**:
+   - `NoctuaBar`: Barra superior flutuante com relógio dinâmico, workspaces clicáveis e indicadores de áudio/bateria/rede.
+   - `NoctuaDashboard`: Painel lateral flutuante com telemetria em tempo real (CPU, RAM, Disco) e animações de suavização.
+   - `NoctuaLauncher`: Menu de aplicativos flutuante nativo em QML com busca em tempo real e execução instantânea.
 
 ---
 
@@ -32,7 +33,7 @@ noctua-niri/
 │   │   ├── NoctuaCard.qml  # Cartão base dinâmico
 │   │   └── NoctuaButton.qml# Botões interativos dinâmicos
 │   ├── services/           # Serviços reativos (Config, Niri, Audio, Bateria, CPU, Rede)
-│   └── modules/            # Módulos de barra e sidebar (Dashboard)
+│   └── modules/            # Módulos de barra, sidebar e launcher
 ├── docs/
 │   └── EYECANDY.md         # Guia visual r/unixporn
 ├── ROADMAP.md              # Planejamento estratégico de evolução

@@ -6,6 +6,7 @@ import Quickshell
 import "services"
 import "modules/bar"
 import "modules/sidebar"
+import "modules/launcher"
 
 ShellRoot {
     // ── Configuration & Services ──────────────────────────────────────────────
@@ -16,11 +17,12 @@ ShellRoot {
     SystemMonitorService  { id: systemMonitorService }
     NetworkService        { id: networkService }
 
-    // ── Shell Modules ─────────────────────────────────────────────────────────
+    // ── Shell Modules ────────────────────────────────-------------------------
     NoctuaBar             {}
     NoctuaDashboard       {}
+    NoctuaLauncher        { id: noctuaLauncher }
 
     Component.onCompleted: {
-        console.log("Noctua-Niri Prime Shell (with ConfigService) initialized successfully.")
+        console.log("Noctua-Niri Prime Shell (with Launcher) initialized successfully.")
     }
 }
