@@ -3,6 +3,7 @@ import Quickshell.Io
 import QtQuick
 import QtQuick.Layouts
 import "../../services"
+import "../../components"
 
 Scope {
     id: root
@@ -14,7 +15,7 @@ Scope {
             screen: modelData
             color: "transparent"
             width: screen.width - 32
-            height: 40
+            height: 44
             anchors {
                 top: true
                 left: true
@@ -24,13 +25,13 @@ Scope {
                 rightMargin: 16
             }
 
-            Rectangle {
+            NoctuaCard {
                 anchors.fill: parent
-                color: "#1e1e2e"
-                opacity: 0.88
-                radius: 16
-                border.width: 1
-                border.color: "#cba6f7"
+                cardColor: "#1e1e2e"
+                borderColor: "#cba6f7"
+                cardOpacity: 0.90
+                cardRadius: 16
+                hoverEffect: false
 
                 RowLayout {
                     anchors.fill: parent
@@ -38,29 +39,39 @@ Scope {
                     anchors.rightMargin: 16
                     spacing: 16
 
-                    // Launcher icon
-                    Text {
-                        text: ""
-                        font.family: "JetBrainsMono Nerd Font"
-                        font.pixelSize: 18
-                        color: "#89b4fa"
+                    // Launcher icon com botão
+                    NoctuaButton {
+                        width: 32
+                        height: 32
+                        icon: ""
+                        baseColor: "#313244"
+                        hoverColor: "#89b4fa"
+                        textColor: "#1e1e2e"
+                        radius: 8
+                        onClicked: {
+                            launcherProc.running = true
+                        }
                     }
 
-                    // Workspaces dinâmicos do Niri com Hover e Feedback Visual
+                    Process {
+                        id: launcherProc
+                        command: ["fuzzel"]
+                    }
+
+                    // Workspaces dinâmicos do Niri com componentes refinados
                     RowLayout {
                         spacing: 6
                         Repeater {
                             model: NiriService.workspaces
                             delegate: Rectangle {
-                                id: wsRect
-                                width: 26
-                                height: 26
+                                width: 28
+                                height: 28
                                 radius: 8
                                 color: modelData.is_active ? "#cba6f7" : (wsMouse.containsMouse ? "#313244" : "transparent")
                                 border.width: 1
                                 border.color: modelData.is_active ? "#f5e0dc" : "#45475a"
 
-                                behavior on color {
+                                Behavior on color {
                                     ColorAnimation { duration: 150 }
                                 }
 
@@ -90,12 +101,12 @@ Scope {
 
                     Item { Layout.fillWidth: true }
 
-                    // Relógio central neon pastel
+                    // Relógio central Caffyne-style
                     Rectangle {
-                        Layout.preferredWidth: 110
-                        Layout.preferredHeight: 28
+                        Layout.preferredWidth: 120
+                        Layout.preferredHeight: 30
                         color: "#313244"
-                        radius: 8
+                        radius: 10
                         border.width: 1
                         border.color: "#fab387"
 
@@ -118,48 +129,44 @@ Scope {
 
                     Item { Layout.fillWidth: true }
 
-                    // Status reais (Áudio interativo e Bateria dinâmica)
+                    // Status (Áudio, Bateria e Rede)
                     RowLayout {
-                        spacing: 14
+                        spacing: 12
 
-                        // Audio com clique para Mute
-                        RowLayout {
-                            spacing: 4
-                            Text {
-                                text: AudioService.muted ? "󰝟" : "󰕾"
-                                font.family: "JetBrainsMono Nerd Font"
-                                font.pixelSize: 14
-                                color: AudioService.muted ? "#f38ba8" : "#a6e3a1"
-                            }
-                            Text {
-                                text: AudioService.volume + "%"
-                                font.family: "JetBrainsMono Nerd Font"
-                                font.pixelSize: 12
-                                color: "#cdd6f4"
-                            }
-
-                            MouseArea {
-                                anchors.fill: parent
-                                onClicked: AudioService.toggleMute()
-                            }
+                        // Audio button
+                        NoctuaButton {
+                            width: 65
+                            height: 28
+                            icon: AudioService.muted ? "󰝟" : "󰕾"
+                            text: AudioService.volume + "%"
+                            baseColor: "#313244"
+                            textColor: AudioService.muted ? "#f38ba8" : "#cdd6f4"
+                            radius: 8
+                            onClicked: AudioService.toggleMute()
                         }
 
-                        // Battery (Apenas se houver bateria detectada)
-                        RowLayout {
-                            spacing: 4
+                        // Battery indicator
+                        NoctuaButton {
+                            width: 65
+                            height: 28
                             visible: BatteryService.hasBattery
-                            Text {
-                                text: "󰁹"
-                                font.family: "JetBrainsMono Nerd Font"
-                                font.pixelSize: 14
-                                color: "#89b4fa"
-                            }
-                            Text {
-                                text: BatteryService.capacity + "%"
-                                font.family: "JetBrainsMono Nerd Font"
-                                font.pixelSize: 12
-                                color: "#cdd6f4"
-                            }
+                            icon: "󰁹"
+                            text: BatteryService.capacity + "%"
+                            baseColor: "#313244"
+                            radius: 8
+                            hoverEffect: false
+                        }
+
+                        // Network indicator
+                        NoctuaButton {
+                            width: 75
+                            height: 28
+                            icon: "󰖩"
+                            text: NetworkService.connectionType
+                            baseColor: "#313244"
+                            textColor: "#a6e3a1"
+                            radius: 8
+                            hoverEffect: false
                         }
                     }
                 }

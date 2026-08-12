@@ -2,6 +2,7 @@ import Quickshell
 import QtQuick
 import QtQuick.Layouts
 import "../../services"
+import "../../components"
 
 Scope {
     id: root
@@ -17,17 +18,17 @@ Scope {
             anchors {
                 top: true
                 right: true
-                topMargin: 64
+                topMargin: 68
                 rightMargin: 16
             }
 
-            Rectangle {
+            NoctuaCard {
                 anchors.fill: parent
-                color: "#1e1e2e"
-                opacity: 0.90
-                radius: 20
-                border.width: 1
-                border.color: "#cba6f7"
+                cardColor: "#1e1e2e"
+                borderColor: "#cba6f7"
+                cardOpacity: 0.92
+                cardRadius: 20
+                hoverEffect: false
 
                 ColumnLayout {
                     anchors.fill: parent
@@ -38,9 +39,9 @@ Scope {
                     RowLayout {
                         spacing: 12
                         Rectangle {
-                            width: 40
-                            height: 40
-                            radius: 12
+                            width: 42
+                            height: 42
+                            radius: 14
                             color: "#313244"
                             border.width: 1
                             border.color: "#89b4fa"
@@ -49,7 +50,7 @@ Scope {
                                 anchors.centerIn: parent
                                 text: ""
                                 font.family: "JetBrainsMono Nerd Font"
-                                font.pixelSize: 20
+                                font.pixelSize: 22
                                 color: "#89b4fa"
                             }
                         }
@@ -60,14 +61,14 @@ Scope {
                                 text: "Noctua-Niri"
                                 font.family: "JetBrainsMono Nerd Font"
                                 font.bold: true
-                                font.pixelSize: 15
+                                font.pixelSize: 16
                                 color: "#cdd6f4"
                             }
                             Text {
-                                text: "Wayland Scrollable Suite"
+                                text: "Caffyne-Style Edition"
                                 font.family: "JetBrainsMono Nerd Font"
                                 font.pixelSize: 11
-                                color: "#9399b2"
+                                color: "#fab387"
                             }
                         }
                     }
@@ -78,22 +79,22 @@ Scope {
                         color: "#313244"
                     }
 
-                    // Seção de System Monitor (CPU, RAM, Disco)
+                    // Seção de System Monitor
                     Text {
-                        text: "System Monitor"
+                        text: "System Telemetry"
                         font.family: "JetBrainsMono Nerd Font"
                         font.bold: true
                         font.pixelSize: 13
                         color: "#fab387"
                     }
 
-                    // CPU Usage Bar
+                    // CPU Usage
                     ColumnLayout {
                         Layout.fillWidth: true
                         spacing: 6
                         RowLayout {
                             Layout.fillWidth: true
-                            Text { text: "󰻠 CPU Usage"; font.family: "JetBrainsMono Nerd Font"; font.pixelSize: 12; color: "#cdd6f4" }
+                            Text { text: "󰻠 CPU Cores"; font.family: "JetBrainsMono Nerd Font"; font.pixelSize: 12; color: "#cdd6f4" }
                             Item { Layout.fillWidth: true }
                             Text { text: SystemMonitorService.cpuUsage + "%"; font.family: "JetBrainsMono Nerd Font"; font.bold: true; font.pixelSize: 12; color: "#89b4fa" }
                         }
@@ -107,17 +108,21 @@ Scope {
                                 height: parent.height
                                 radius: 4
                                 color: "#89b4fa"
+
+                                Behavior on width {
+                                    NumberAnimation { duration: 300; easing.type: Easing.OutQuad }
+                                }
                             }
                         }
                     }
 
-                    // RAM Usage Bar
+                    // RAM Usage
                     ColumnLayout {
                         Layout.fillWidth: true
                         spacing: 6
                         RowLayout {
                             Layout.fillWidth: true
-                            Text { text: "󰍛 RAM Usage"; font.family: "JetBrainsMono Nerd Font"; font.pixelSize: 12; color: "#cdd6f4" }
+                            Text { text: "󰍛 Memory"; font.family: "JetBrainsMono Nerd Font"; font.pixelSize: 12; color: "#cdd6f4" }
                             Item { Layout.fillWidth: true }
                             Text { text: SystemMonitorService.ramUsage + "%"; font.family: "JetBrainsMono Nerd Font"; font.bold: true; font.pixelSize: 12; color: "#cba6f7" }
                         }
@@ -131,17 +136,21 @@ Scope {
                                 height: parent.height
                                 radius: 4
                                 color: "#cba6f7"
+
+                                Behavior on width {
+                                    NumberAnimation { duration: 300; easing.type: Easing.OutQuad }
+                                }
                             }
                         }
                     }
 
-                    // Disk Usage Bar
+                    // Disk Usage
                     ColumnLayout {
                         Layout.fillWidth: true
                         spacing: 6
                         RowLayout {
                             Layout.fillWidth: true
-                            Text { text: "󰋊 Disk Root"; font.family: "JetBrainsMono Nerd Font"; font.pixelSize: 12; color: "#cdd6f4" }
+                            Text { text: "󰋊 Root Storage"; font.family: "JetBrainsMono Nerd Font"; font.pixelSize: 12; color: "#cdd6f4" }
                             Item { Layout.fillWidth: true }
                             Text { text: SystemMonitorService.diskUsage; font.family: "JetBrainsMono Nerd Font"; font.bold: true; font.pixelSize: 12; color: "#a6e3a1" }
                         }
@@ -153,9 +162,9 @@ Scope {
                         color: "#313244"
                     }
 
-                    // Quick Actions / Status
+                    // Quick Actions
                     Text {
-                        text: "Quick Controls"
+                        text: "Quick Toggles"
                         font.family: "JetBrainsMono Nerd Font"
                         font.bold: true
                         font.pixelSize: 13
@@ -168,30 +177,30 @@ Scope {
                         rowSpacing: 8
                         columnSpacing: 8
 
-                        Rectangle {
+                        NoctuaButton {
                             Layout.fillWidth: true
-                            height: 36
-                            radius: 8
-                            color: "#313244"
-                            Text { anchors.centerIn: parent; text: "󰖩 " + NetworkService.connectionType; font.family: "JetBrainsMono Nerd Font"; font.pixelSize: 12; color: "#a6e3a1" }
+                            height: 38
+                            icon: "󰖩"
+                            text: NetworkService.connectionType
+                            radius: 10
                         }
 
-                        Rectangle {
+                        NoctuaButton {
                             Layout.fillWidth: true
-                            height: 36
-                            radius: 8
-                            color: "#313244"
-                            Text { anchors.centerIn: parent; text: "󰂯 Bluetooth"; font.family: "JetBrainsMono Nerd Font"; font.pixelSize: 12; color: "#89b4fa" }
+                            height: 38
+                            icon: "󰂯"
+                            text: "Bluetooth"
+                            radius: 10
                         }
                     }
 
                     Item { Layout.fillHeight: true }
 
-                    // Rodapé do Dashboard
+                    // Rodapé
                     RowLayout {
                         Layout.alignment: Qt.AlignHCenter
                         Text {
-                            text: "Noctua-Niri • r/unixporn Edition"
+                            text: "Noctua-Niri • Caffyne Architecture"
                             font.family: "JetBrainsMono Nerd Font"
                             font.pixelSize: 10
                             color: "#6c7086"
