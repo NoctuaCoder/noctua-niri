@@ -1,0 +1,22 @@
+{
+  "theme": {
+    "name": "Catppuccin Mocha (Default)",
+    "background": "#1e1e2e",
+    "surface": "#313244",
+    "surface_hover": "#45475a",
+    "text": "#cdd6f4",
+    "subtext": "#9399b2",
+    "accent": "#cba6f7",
+    "accent_border": "#f5e0dc",
+    "blue": "#89b4fa",
+    "peach": "#fab387",
+    "green": "#a6e3a1",
+    "red": "#f38ba8"
+  },
+  "shell": {
+    "opacity": 0.90,
+    "radius": 16,
+    "blur": true,
+    "fontFamily": "JetBrainsMono Nerd Font"
+  }
+}

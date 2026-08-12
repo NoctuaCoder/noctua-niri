@@ -1,13 +1,14 @@
 import QtQuick
+import "../services"
 
 Rectangle {
     id: root
 
     property string text: ""
     property string icon: ""
-    property color baseColor: "#313244"
-    property color hoverColor: "#45475a"
-    property color textColor: "#cdd6f4"
+    property color baseColor: ConfigService.surface
+    property color hoverColor: ConfigService.surfaceHover
+    property color textColor: ConfigService.text
     property int radius: 10
 
     signal clicked()
@@ -17,7 +18,7 @@ Rectangle {
     color: mouseArea.containsMouse ? hoverColor : baseColor
     radius: root.radius
     border.width: 1
-    border.color: mouseArea.containsMouse ? "#cba6f7" : "#45475a"
+    border.color: mouseArea.containsMouse ? ConfigService.accent : ConfigService.surfaceHover
 
     Behavior on color {
         ColorAnimation { duration: 150 }
@@ -29,7 +30,7 @@ Rectangle {
 
         Text {
             text: root.icon
-            font.family: "JetBrainsMono Nerd Font"
+            font.family: ConfigService.fontFamily
             font.pixelSize: 14
             color: root.textColor
             visible: root.icon !== ""
@@ -37,7 +38,7 @@ Rectangle {
 
         Text {
             text: root.text
-            font.family: "JetBrainsMono Nerd Font"
+            font.family: ConfigService.fontFamily
             font.pixelSize: 12
             font.bold: true
             color: root.textColor

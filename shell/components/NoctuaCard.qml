@@ -1,13 +1,14 @@
 import QtQuick
+import "../services"
 
 Rectangle {
     id: root
 
     property alias contentItem: container.data
-    property color cardColor: "#1e1e2e"
-    property color borderColor: "#cba6f7"
-    property real cardOpacity: 0.88
-    property int cardRadius: 16
+    property color cardColor: ConfigService.background
+    property color borderColor: ConfigService.accent
+    property real cardOpacity: ConfigService.shellOpacity
+    property int cardRadius: ConfigService.shellRadius
     property bool hoverEffect: true
 
     signal clicked()
@@ -16,7 +17,7 @@ Rectangle {
     opacity: cardOpacity
     radius: cardRadius
     border.width: 1
-    border.color: mouseArea.containsMouse && hoverEffect ? "#f5e0dc" : borderColor
+    border.color: mouseArea.containsMouse && hoverEffect ? ConfigService.accentBorder : borderColor
 
     Behavior on border.color {
         ColorAnimation { duration: 200 }
