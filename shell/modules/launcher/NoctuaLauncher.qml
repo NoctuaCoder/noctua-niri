@@ -17,7 +17,6 @@ Scope {
         }
     }
 
-    // Monitora um arquivo de sinalização em /tmp/noctua-launcher-toggle para abrir/fechar instantaneamente
     Timer {
         interval: 100
         running: true
@@ -61,18 +60,20 @@ Scope {
 
     Process {
         id: appsProc
-        command: ["sh", "-c", "grep -h '^Name=\\|^Exec=' /usr/share/applications/*.desktop 2>/dev/null | sed 'N;s/\\n/|/' | sed 's/Name=//' | sed 's/Exec=//'"]
+        // Extrai Name, Exec e Icon de arquivos .desktop
+        command: ["sh", "-c", "grep -h '^Name=\\|^Exec=\\|^Icon=' /usr/share/applications/*.desktop 2>/dev/null | paste -d'|' - - - | sed 's/Name=//' | sed 's/Exec=//' | sed 's/Icon=//'"]
         stdout: SplitParser {
             onRead: data => {
                 let lines = data.trim().split("\n")
                 let list = []
                 for (let i = 0; i < lines.length; i++) {
                     let parts = lines[i].split("|")
-                    if (parts.length >= 2) {
+                    if (parts.length >= 3) {
                         let name = parts[0].trim()
                         let exec = parts[1].trim().split(" ")[0]
+                        let icon = parts[2].trim()
                         if (name && exec && !name.includes("%")) {
-                            list.push({ name: name, exec: exec })
+                            list.push({ name: name, exec: exec, icon: icon })
                         }
                     }
                 }
@@ -101,8 +102,8 @@ Scope {
             screen: modelData
             color: "transparent"
             visible: root.isOpen
-            width: 600
-            height: 450
+            width: 620
+            height: 480
             anchors {
                 centerIn: true
             }
@@ -111,18 +112,19 @@ Scope {
                 anchors.fill: parent
                 cardColor: ConfigService.background
                 borderColor: ConfigService.accent
-                cardOpacity: 0.95
+                cardOpacity: 0.96
                 cardRadius: 20
                 hoverEffect: false
 
                 ColumnLayout {
                     anchors.fill: parent
-                    anchors.margins: 20
+                    anchors.margins: 22
                     spacing: 16
 
+                    // Cabeçalho de Pesquisa
                     Rectangle {
                         Layout.fillWidth: true
-                        height: 46
+                        height: 48
                         color: ConfigService.surface
                         radius: 12
                         border.width: 1
@@ -171,6 +173,7 @@ Scope {
                         }
                     }
 
+                    // Lista de Aplicativos Otimizada
                     ListView {
                         id: appListView
                         Layout.fillWidth: true
@@ -181,29 +184,49 @@ Scope {
 
                         delegate: Rectangle {
                             width: appListView.width
-                            height: 40
-                            radius: 8
+                            height: 44
+                            radius: 10
                             color: appMouse.containsMouse ? ConfigService.surfaceHover : "transparent"
 
                             RowLayout {
                                 anchors.fill: parent
-                                anchors.leftMargin: 12
-                                anchors.rightMargin: 12
-                                spacing: 10
+                                anchors.leftMargin: 14
+                                anchors.rightMargin: 14
+                                spacing: 12
 
-                                Text {
-                                    text: "󰣆"
-                                    font.family: ConfigService.fontFamily
-                                    font.pixelSize: 14
-                                    color: ConfigService.blue
+                                Rectangle {
+                                    width: 28
+                                    height: 28
+                                    radius: 6
+                                    color: ConfigService.surface
+                                    border.width: 1
+                                    border.color: ConfigService.accentBorder
+
+                                    Text {
+                                        anchors.centerIn: parent
+                                        text: "󰣆"
+                                        font.family: ConfigService.fontFamily
+                                        font.pixelSize: 14
+                                        color: ConfigService.blue
+                                    }
                                 }
 
-                                Text {
-                                    text: modelData.name
-                                    font.family: ConfigService.fontFamily
-                                    font.pixelSize: 13
-                                    color: ConfigService.text
+                                ColumnLayout {
                                     Layout.fillWidth: true
+                                    spacing: 2
+                                    Text {
+                                        text: modelData.name
+                                        font.family: ConfigService.fontFamily
+                                        font.pixelSize: 14
+                                        font.bold: true
+                                        color: ConfigService.text
+                                    }
+                                    Text {
+                                        text: modelData.exec
+                                        font.family: ConfigService.fontFamily
+                                        font.pixelSize: 11
+                                        color: ConfigService.subtext
+                                    }
                                 }
                             }
 

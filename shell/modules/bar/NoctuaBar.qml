@@ -27,10 +27,10 @@ Scope {
 
             NoctuaCard {
                 anchors.fill: parent
-                cardColor: "#1e1e2e"
-                borderColor: "#cba6f7"
-                cardOpacity: 0.90
-                cardRadius: 16
+                cardColor: ConfigService.background
+                borderColor: ConfigService.accent
+                cardOpacity: ConfigService.shellOpacity
+                cardRadius: ConfigService.shellRadius
                 hoverEffect: false
 
                 RowLayout {
@@ -44,9 +44,9 @@ Scope {
                         width: 32
                         height: 32
                         icon: ""
-                        baseColor: "#313244"
-                        hoverColor: "#89b4fa"
-                        textColor: "#1e1e2e"
+                        baseColor: ConfigService.surface
+                        hoverColor: ConfigService.blue
+                        textColor: ConfigService.text
                         radius: 8
                         onClicked: {
                             launcherProc.running = true
@@ -55,7 +55,7 @@ Scope {
 
                     Process {
                         id: launcherProc
-                        command: ["fuzzel"]
+                        command: ["sh", "-c", "touch /tmp/noctua_toggle"]
                     }
 
                     // Workspaces dinâmicos do Niri com componentes refinados
@@ -67,9 +67,9 @@ Scope {
                                 width: 28
                                 height: 28
                                 radius: 8
-                                color: modelData.is_active ? "#cba6f7" : (wsMouse.containsMouse ? "#313244" : "transparent")
+                                color: modelData.is_active ? ConfigService.accent : (wsMouse.containsMouse ? ConfigService.surface : "transparent")
                                 border.width: 1
-                                border.color: modelData.is_active ? "#f5e0dc" : "#45475a"
+                                border.color: modelData.is_active ? ConfigService.accentBorder : ConfigService.surfaceHover
 
                                 Behavior on color {
                                     ColorAnimation { duration: 150 }
@@ -78,10 +78,10 @@ Scope {
                                 Text {
                                     anchors.centerIn: parent
                                     text: modelData.idx
-                                    font.family: "JetBrainsMono Nerd Font"
+                                    font.family: ConfigService.fontFamily
                                     font.pixelSize: 12
                                     font.bold: true
-                                    color: modelData.is_active ? "#1e1e2e" : "#cdd6f4"
+                                    color: modelData.is_active ? ConfigService.background : ConfigService.text
                                 }
 
                                 MouseArea {
@@ -101,22 +101,22 @@ Scope {
 
                     Item { Layout.fillWidth: true }
 
-                    // Relógio central Caffyne-style
+                    // Relógio central
                     Rectangle {
                         Layout.preferredWidth: 120
                         Layout.preferredHeight: 30
-                        color: "#313244"
+                        color: ConfigService.surface
                         radius: 10
                         border.width: 1
-                        border.color: "#fab387"
+                        border.color: ConfigService.peach
 
                         Text {
                             anchors.centerIn: parent
                             text: Qt.formatTime(new Date(), "hh:mm:ss")
-                            font.family: "JetBrainsMono Nerd Font"
+                            font.family: ConfigService.fontFamily
                             font.pixelSize: 12
                             font.bold: true
-                            color: "#fab387"
+                            color: ConfigService.peach
 
                             Timer {
                                 interval: 1000
@@ -139,8 +139,8 @@ Scope {
                             height: 28
                             icon: AudioService.muted ? "󰝟" : "󰕾"
                             text: AudioService.volume + "%"
-                            baseColor: "#313244"
-                            textColor: AudioService.muted ? "#f38ba8" : "#cdd6f4"
+                            baseColor: ConfigService.surface
+                            textColor: AudioService.muted ? ConfigService.red : ConfigService.text
                             radius: 8
                             onClicked: AudioService.toggleMute()
                         }
@@ -152,7 +152,8 @@ Scope {
                             visible: BatteryService.hasBattery
                             icon: "󰁹"
                             text: BatteryService.capacity + "%"
-                            baseColor: "#313244"
+                            baseColor: ConfigService.surface
+                            textColor: ConfigService.text
                             radius: 8
                             hoverEffect: false
                         }
@@ -163,8 +164,8 @@ Scope {
                             height: 28
                             icon: "󰖩"
                             text: NetworkService.connectionType
-                            baseColor: "#313244"
-                            textColor: "#a6e3a1"
+                            baseColor: ConfigService.surface
+                            textColor: ConfigService.green
                             radius: 8
                             hoverEffect: false
                         }

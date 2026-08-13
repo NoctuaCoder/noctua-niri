@@ -6,7 +6,6 @@ import QtQuick
 QtObject {
     id: root
 
-    // Cores padrão (Catppuccin Mocha)
     property color background: "#1e1e2e"
     property color surface: "#313244"
     property color surfaceHover: "#45475a"
@@ -27,9 +26,18 @@ QtObject {
         configLoader.running = true
     }
 
+    // Hot-Reload: Timer para verificar alterações no theme.json a cada 1 segundo
+    Timer {
+        interval: 1000
+        running: true
+        repeat: true
+        onTriggered: {
+            configLoader.running = true
+        }
+    }
+
     Process {
         id: configLoader
-        // Tenta ler o theme.json do diretório de config
         command: ["cat", Quickshell.env("HOME") + "/.config/quickshell/theme.json"]
         stdout: SplitParser {
             onRead: data => {
@@ -53,9 +61,8 @@ QtObject {
                         if (cfg.shell.radius !== undefined) root.shellRadius = cfg.shell.radius
                         if (cfg.shell.fontFamily) root.fontFamily = cfg.shell.fontFamily
                     }
-                    console.log("[ConfigService] Theme loaded successfully from theme.json")
                 } catch (e) {
-                    console.log("[ConfigService] Error parsing theme.json, using defaults:", e)
+                    // Ignora erros parciais durante salvamento
                 }
             }
         }
