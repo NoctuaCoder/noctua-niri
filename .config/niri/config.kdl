@@ -144,6 +144,7 @@ binds {
     Mod+Q { close-window; }
     Mod+Shift+E { quit; }
     Mod+Alt+L { spawn "swaylock"; }
+    Mod+Shift+P { spawn "sh" "-c" "touch /tmp/noctua_power_toggle"; }
 
     // Column and window navigation (Noctua Scrollable Flow)
     Mod+H     { focus-column-left; }

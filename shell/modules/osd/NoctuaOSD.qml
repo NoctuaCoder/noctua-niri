@@ -35,7 +35,7 @@ Scope {
         }
     }
 
-    // Monitora brilho via brightnessctl periodicamente se disponível
+    // Monitora brilho via brightnessctl -m (formato: device,class,current,max,percent%)
     Timer {
         interval: 1000
         running: true
@@ -48,26 +48,23 @@ Scope {
 
     Process {
         id: brightnessProc
-        command: ["brightnessctl", "get"]
+        command: ["brightnessctl", "-m"]
         stdout: SplitParser {
             onRead: data => {
-                let current = parseInt(data.trim())
-                if (!isNaN(current)) {
-                    // Assume max brightness as 255 ou 100 dependendo do device, vamos converter para percentual aprox
-                    // Idealmente brightnessctl g -m ou similar, mas vamos simplificar pegando max
-                    maxBrightnessProc.running = true
+                let line = data.trim()
+                if (line.includes(",")) {
+                    let parts = line.split(",")
+                    if (parts.length >= 5) {
+                        let pctStr = parts[4].replace("%", "").trim()
+                        let val = parseInt(pctStr)
+                        if (!isNaN(val)) {
+                            if (brightnessProc.lastVal !== undefined && brightnessProc.lastVal !== val) {
+                                root.show("Brightness", "󰃠", val)
+                            }
+                            brightnessProc.lastVal = val
+                        }
+                    }
                 }
-            }
-        }
-    }
-
-    Process {
-        id: maxBrightnessProc
-        command: ["brightnessctl", "max"]
-        stdout: SplitParser {
-            onRead: data => {
-                let max = parseInt(data.trim())
-                // Poderíamos calcular a porcentagem exata, mas mantemos o mecanismo pronto
             }
         }
     }

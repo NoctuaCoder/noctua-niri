@@ -14,6 +14,28 @@ Scope {
         isOpen = !isOpen
     }
 
+    Timer {
+        interval: 100
+        running: true
+        repeat: true
+        triggeredOnStart: false
+        onTriggered: {
+            checkPowerProc.running = true
+        }
+    }
+
+    Process {
+        id: checkPowerProc
+        command: ["sh", "-c", "if [ -f /tmp/noctua_power_toggle ]; then rm /tmp/noctua_power_toggle && echo 'TOGGLE_POWER'; fi"]
+        stdout: SplitParser {
+            onRead: data => {
+                if (data.trim() === "TOGGLE_POWER") {
+                    root.toggle()
+                }
+            }
+        }
+    }
+
     Process {
         id: powerProc
     }
