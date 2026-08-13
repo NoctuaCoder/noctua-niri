@@ -1,5 +1,5 @@
 // ============================================================================
-// Noctua-Niri Shell — Quickshell Configuration (Prime Edition)
+// Noctua-Niri Shell — Quickshell Configuration (Sovereign Edition v1.2)
 // ============================================================================
 
 import Quickshell
@@ -9,6 +9,7 @@ import "modules/sidebar"
 import "modules/launcher"
 import "modules/osd"
 import "modules/powermenu"
+import "modules/notifications"
 
 ShellRoot {
     // ── Configuration & Services ──────────────────────────────────────────────
@@ -18,6 +19,7 @@ ShellRoot {
     BatteryService        { id: batteryService }
     SystemMonitorService  { id: systemMonitorService }
     NetworkService        { id: networkService }
+    NotificationService   { id: notificationService }
 
     // ── Shell Modules ─────────────────────────────────────────────────────────
     NoctuaBar             {}
@@ -25,8 +27,9 @@ ShellRoot {
     NoctuaLauncher        { id: noctuaLauncher }
     NoctuaOSD             { id: noctuaOSD }
     NoctuaPowerMenu       { id: noctuaPowerMenu }
+    NoctuaNotifications   {}
 
     Component.onCompleted: {
-        console.log("Noctua-Niri Prime Shell (with PowerMenu, OSD & Launcher) initialized successfully.")
+        console.log("Noctua-Niri Sovereign Shell (v1.2) with Native Notifications initialized successfully.")
     }
 }
