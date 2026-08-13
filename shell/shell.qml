@@ -1,5 +1,5 @@
 // ============================================================================
-// Noctua-Niri Shell — Quickshell Configuration (Sovereign Edition v1.3)
+// Noctua-Niri Shell — Quickshell Configuration (Ultimate Edition v2.0)
 // ============================================================================
 
 import Quickshell
@@ -10,7 +10,7 @@ import "modules/launcher"
 import "modules/osd"
 import "modules/powermenu"
 import "modules/notifications"
-import "modules/lockscreen"
+// import "modules/lockscreen" // v2.0 uses swaylock for real security
 
 ShellRoot {
     // ── Configuration & Services ──────────────────────────────────────────────
@@ -29,9 +29,9 @@ ShellRoot {
     NoctuaOSD             { id: noctuaOSD }
     NoctuaPowerMenu       { id: noctuaPowerMenu }
     NoctuaNotifications   {}
-    NoctuaLock            { id: noctuaLock }
+    // NoctuaLock            { id: noctuaLock } // v2.0 uses swaylock for real security
 
     Component.onCompleted: {
-        console.log("Noctua-Niri Sovereign Shell (v1.3) with Native Lockscreen initialized successfully.")
+        console.log("Noctua-Niri Ultimate Shell (v2.0) with Swaylock integration initialized successfully.")
     }
 }

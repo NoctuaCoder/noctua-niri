@@ -3,7 +3,7 @@ set -e
 
 echo "=================================================="
 echo "    Instalador Oficial - Noctua-Niri Prime        "
-echo "    (Sovereign Edition v1.2)                      "
+echo "    (Ultimate Edition v2.0)                       "
 echo "=================================================="
 
 backup_existing() {
@@ -36,7 +36,7 @@ bar_choice=${bar_choice:-1}
 
 if [ "$PKG_MANAGER" = "pacman" ]; then
     echo "[*] Instalando dependências no Arch Linux..."
-    sudo pacman -S --needed niri fuzzel swaync swww kitty grim slurp wl-clipboard brightnessctl pamixer pavucontrol ttf-jetbrains-mono-nerd python-dbus python-gobject nc
+    sudo pacman -S --needed niri fuzzel swaync swww kitty grim slurp wl-clipboard brightnessctl pamixer pavucontrol ttf-jetbrains-mono-nerd python-dbus python-gobject nc swaylock
 elif [ "$PKG_MANAGER" = "dnf" ]; then
     echo "[!] Fedora detectado. Certifique-se de instalar niri, quickshell, python3-dbus e python3-gobject."
 elif [ "$PKG_MANAGER" = "apt" ]; then
@@ -83,7 +83,7 @@ if [ -f "$CONFIG_KDL" ]; then
 fi
 
 echo "=================================================="
-echo "   Instalação concluída com sucesso! (v1.2)"
+echo "   Instalação concluída com sucesso! (v2.0)"
 echo "   Backups salvos com extensão .bak"
 echo "   Inicie o Niri a partir do seu gerenciador de login."
 echo "=================================================="
