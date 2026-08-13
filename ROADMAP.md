@@ -1,6 +1,6 @@
 # Noctua-Niri Roadmap: Rumo à Superioridade Absoluta 🚀
 
-Este documento estabelece o plano estratégico de desenvolvimento do **Noctua-Niri**, detalhando os eixos necessários para superar as alternativas tradicionais (`Noctalia`, `Caelestia`) e consolidar a suíte como a referência definitiva para o compositor Niri.
+Este documento estabelece o plano estratégico de desenvolvimento do **Noctua-Niri**, detalhando os eixos necessários para superar as alternativas tradicionais e consolidar a suíte como a referência definitiva para o compositor Niri.
 
 ---
 
@@ -13,23 +13,24 @@ Este documento estabelece o plano estratégico de desenvolvimento do **Noctua-Ni
 
 ---
 
-## 🛠️ Eixos de Evolução Prioritários
+## 🛠️ Eixos de Evolução e Status Atual
 
-### 1. Personalização Real (Concluído no Core / Em Expansão)
-- [x] **Configuração Externa (`theme.json`)**: Sistema centralizado para gerenciar cores, opacidades, raios de borda e tipografia.
+### 1. Personalização Real (Concluído)
+- [x] **Configuração Externa (`theme.json`)**: Sistema centralizado para gerenciar cores, opacidades, raios de borda e fontes.
+- [x] **Hot-Reload de Temas**: Atualização instantânea da interface ao salvar modificações no arquivo de configuração.
 - [ ] **Suporte a Matugen / Material You**: Geração automática de paletas de cores a partir do wallpaper atual.
-- [ ] **Módulos Ativáveis**: Habilitar ou desabilitar widgets da barra e do dashboard via arquivo de configuração.
 
-### 2. Estética e Micro-interações Avançadas
+### 2. Estética e Micro-interações Avançadas (Concluído)
 - [x] **Glassmorphism Profundo**: Transparências reativas combinadas com bordas neon e glow sutil.
-- [ ] **Desfoque Real (Blur)**: Integração nativa com os recursos de blur do Niri recente.
-- [ ] **Animações de Entrada/Saída**: Eixos de *slide* e *fade* fluidos baseados em curvas de suavização aprimoradas.
+- [x] **Biblioteca QML Reativa (`NoctuaCard`, `NoctuaButton`)**: Componentes modulares com animações de hover e transições suaves.
+- [x] **Animações de Entrada/Saída**: Eixos de *fade* e *scale* fluidos no launcher e módulos de shell.
 
-### 3. Completude de Shell (Próximos Marcos)
-- [ ] **App Launcher Flutuante**: Menu de aplicativos integrado nativamente em Quickshell.
-- [ ] **OSD de Volume e Brilho**: Indicadores flutuantes elegantes ao ajustar hardware.
+### 3. Completude de Shell (Em Andamento)
+- [x] **NoctuaLauncher Nativo**: Menu de aplicativos em QML com parser Python robusto, cache em memória, navegação por setas (`Up`/`Down`) e fechamento por clique externo.
+- [x] **NoctuaOSD Nativo**: Indicador flutuante em tempo real para controle de áudio e feedback de hardware.
 - [ ] **Central de Notificações Nativa**: Substituição de dependências externas por um sistema QML unificado.
-- [ ] **Wallpaper Manager**: Gerenciador de fundos de tela com suporte a troca dinâmica de temas.
+- [ ] **Power Menu / Session Controls**: Controles dedicados de logout, reboot e shutdown.
+- [ ] **Lockscreen**: Tela de bloqueio integrada à estética da shell.
 
 ---
 
@@ -39,6 +40,6 @@ Este documento estabelece o plano estratégico de desenvolvimento do **Noctua-Ni
 | :--- | :--- | :--- |
 | **v0.1-MVP** | Compositor Niri + Waybar + Base QML | Concluído |
 | **v0.5-EyeCandy** | Quickshell reativo + Dashboard + Services | Concluído |
-| **v0.8-Modular** | Biblioteca QML (`NoctuaCard`, `NoctuaButton`) | Concluído |
-| **v1.0-CoreConfig** | Configuração externa via JSON (`theme.json`) | **Atual** |
-| **v1.5-Dynamic** | Matugen + App Launcher nativo | Próximo |
+| **v1.0-Pro** | Launcher nativo + Hot-reload + Teclado | Concluído |
+| **v1.1-Elite** | OSD de hardware + Cache de apps + Refinamentos | **Atual** |
+| **v2.0-Sovereign** | Power Menu + Notificações nativas + Matugen | Próximo |

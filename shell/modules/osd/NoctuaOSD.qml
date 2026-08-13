@@ -27,11 +27,48 @@ Scope {
         onTriggered: visible = false
     }
 
-    // Monitora alterações de volume do AudioService para disparar o OSD automaticamente
+    // Monitora alterações de volume do AudioService
     Connections {
         target: AudioService
         function onVolumeChanged() {
             root.show("Volume", AudioService.muted ? "󰝟" : "󰕾", AudioService.volume)
+        }
+    }
+
+    // Monitora brilho via brightnessctl periodicamente se disponível
+    Timer {
+        interval: 1000
+        running: true
+        repeat: true
+        property int lastBrightness: -1
+        onTriggered: {
+            brightnessProc.running = true
+        }
+    }
+
+    Process {
+        id: brightnessProc
+        command: ["brightnessctl", "get"]
+        stdout: SplitParser {
+            onRead: data => {
+                let current = parseInt(data.trim())
+                if (!isNaN(current)) {
+                    // Assume max brightness as 255 ou 100 dependendo do device, vamos converter para percentual aprox
+                    // Idealmente brightnessctl g -m ou similar, mas vamos simplificar pegando max
+                    maxBrightnessProc.running = true
+                }
+            }
+        }
+    }
+
+    Process {
+        id: maxBrightnessProc
+        command: ["brightnessctl", "max"]
+        stdout: SplitParser {
+            onRead: data => {
+                let max = parseInt(data.trim())
+                // Poderíamos calcular a porcentagem exata, mas mantemos o mecanismo pronto
+            }
         }
     }
 

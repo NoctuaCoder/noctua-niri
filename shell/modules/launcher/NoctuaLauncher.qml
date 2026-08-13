@@ -13,7 +13,12 @@ Scope {
     function toggle() {
         isOpen = !isOpen
         if (isOpen) {
-            appService.loadApps()
+            // Se o cache estiver vazio, carrega. Caso contrário, usa o cache instantaneamente.
+            if (appService.allApps.length === 0) {
+                appService.loadApps()
+            } else {
+                appService.filteredApps = appService.allApps
+            }
             currentIndex = 0
             searchInput.text = ""
             searchInput.forceActiveFocus()
@@ -128,7 +133,6 @@ print(json.dumps(apps))
             width: screen.width
             height: screen.height
 
-            // Área externa translúcida para fechar ao clicar fora
             MouseArea {
                 anchors.fill: parent
                 enabled: root.isOpen
@@ -136,14 +140,12 @@ print(json.dumps(apps))
                     root.isOpen = false
                 }
 
-                // Conteúdo centralizado do Launcher
                 Item {
                     id: launcherContainer
                     width: 620
                     height: 480
                     anchors.centerIn: parent
 
-                    // Impede que cliques dentro do card fechem o launcher
                     MouseArea {
                         anchors.fill: parent
                         onClicked: mouse.accepted = true
@@ -162,7 +164,6 @@ print(json.dumps(apps))
                             anchors.margins: 22
                             spacing: 16
 
-                            // Cabeçalho de Pesquisa
                             Rectangle {
                                 Layout.fillWidth: true
                                 height: 48
@@ -227,7 +228,6 @@ print(json.dumps(apps))
                                 }
                             }
 
-                            // Lista de Aplicativos com Navegação por Teclado
                             ListView {
                                 id: appListView
                                 Layout.fillWidth: true
@@ -308,7 +308,6 @@ print(json.dumps(apps))
                         }
                     }
 
-                    // Animação de Entrada (Fade & Scale)
                     opacity: root.isOpen ? 1 : 0
                     scale: root.isOpen ? 1 : 0.95
                     Behavior on opacity { NumberAnimation { duration: 150; easing.type: Easing.OutQuad } }
