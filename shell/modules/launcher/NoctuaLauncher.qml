@@ -58,35 +58,54 @@ Scope {
         }
     }
 
+    // Parser Python robusto para arquivos .desktop (filtra NoDisplay, Terminal=true indesejados, e mapeia ícones)
     Process {
         id: appsProc
-        // Extrai Name, Exec e Icon de arquivos .desktop
-        command: ["sh", "-c", "grep -h '^Name=\\|^Exec=\\|^Icon=' /usr/share/applications/*.desktop 2>/dev/null | paste -d'|' - - - | sed 's/Name=//' | sed 's/Exec=//' | sed 's/Icon=//'"]
+        command: ["python3", "-c", "
+import glob, os, configparser
+
+apps = []
+seen = set()
+
+for path in glob.glob('/usr/share/applications/*.desktop') + glob.glob(os.path.expanduser('~/.local/share/applications/*.desktop')):
+    try:
+        config = configparser.ConfigParser(interpolation=None)
+        config.read(path, encoding='utf-8')
+        if not config.has_section('Desktop Entry'):
+            continue
+        entry = config['Desktop Entry']
+        if entry.getboolean('NoDisplay', False) or entry.getboolean('Hidden', False):
+            continue
+        if entry.get('Type', '') != 'Application':
+            continue
+        name = entry.get('Name', '')
+        exec_cmd = entry.get('Exec', '')
+        icon = entry.get('Icon', 'application-x-executable')
+        
+        if not name or not exec_cmd:
+            continue
+            
+        # Limpa argumentos do Exec (%f, %U, etc.)
+        exec_clean = exec_cmd.split('%')[0].strip()
+        
+        if name not in seen:
+            seen.add(name)
+            apps.append({'name': name, 'exec': exec_clean, 'icon': icon})
+    except Exception:
+        pass
+
+import json
+print(json.dumps(apps))
+"]
         stdout: SplitParser {
             onRead: data => {
-                let lines = data.trim().split("\n")
-                let list = []
-                for (let i = 0; i < lines.length; i++) {
-                    let parts = lines[i].split("|")
-                    if (parts.length >= 3) {
-                        let name = parts[0].trim()
-                        let exec = parts[1].trim().split(" ")[0]
-                        let icon = parts[2].trim()
-                        if (name && exec && !name.includes("%")) {
-                            list.push({ name: name, exec: exec, icon: icon })
-                        }
-                    }
+                try {
+                    let list = JSON.parse(data.trim())
+                    appService.allApps = list
+                    appService.filteredApps = list
+                } catch (e) {
+                    console.log("Error parsing apps:", e)
                 }
-                let unique = []
-                let seen = {}
-                for (let i = 0; i < list.length; i++) {
-                    if (!seen[list[i].name]) {
-                        seen[list[i].name] = true
-                        unique.push(list[i])
-                    }
-                }
-                appService.allApps = unique
-                appService.filteredApps = unique
             }
         }
     }
@@ -163,7 +182,7 @@ Scope {
                                 Keys.onReturnPressed: {
                                     if (appService.filteredApps.length > 0) {
                                         let target = appService.filteredApps[0].exec
-                                        execProc.command = [target]
+                                        execProc.command = ["sh", "-c", target]
                                         execProc.running = true
                                         root.isOpen = false
                                         text = ""
@@ -194,21 +213,16 @@ Scope {
                                 anchors.rightMargin: 14
                                 spacing: 12
 
-                                Rectangle {
+                                Image {
                                     width: 28
                                     height: 28
-                                    radius: 6
-                                    color: ConfigService.surface
-                                    border.width: 1
-                                    border.color: ConfigService.accentBorder
+                                    // Tenta carregar o ícone do tema do sistema ou usa fallback
+                                    source: "image://icon/" + modelData.icon
+                                    sourceSize.width: 28
+                                    sourceSize.height: 28
 
-                                    Text {
-                                        anchors.centerIn: parent
-                                        text: "󰣆"
-                                        font.family: ConfigService.fontFamily
-                                        font.pixelSize: 14
-                                        color: ConfigService.blue
-                                    }
+                                    // Fallback caso o provedor de ícones não resolva diretamente
+                                    defaultSource: "qrc:/qt-project.org/imports/QuickControls2/images/navigation-indicator.png"
                                 }
 
                                 ColumnLayout {
@@ -235,7 +249,7 @@ Scope {
                                 anchors.fill: parent
                                 hoverEnabled: true
                                 onClicked: {
-                                    execProc.command = [modelData.exec]
+                                    execProc.command = ["sh", "-c", modelData.exec]
                                     execProc.running = true
                                     root.isOpen = false
                                     searchInput.text = ""
