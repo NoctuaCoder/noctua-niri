@@ -1,0 +1,21 @@
+# Noctua-Niri Swaylock Config (Catppuccin Mocha)
+ignore-empty-password
+font="JetBrainsMono Nerd Font"
+
+# Cores Catppuccin Mocha
+color=1e1e2e
+ring-color=cba6f7
+insider-color=1e1e2e
+key-hl-color=a6e3a1
+separator-color=313244
+text-color=cdd6f4
+text-caps-lock-color=fab387
+line-color=00000000
+ring-ver-color=89b4fa
+ring-wrong-color=f38ba8
+ring-clear-color=94e2d5
+
+# Estética
+indicator-radius=100
+indicator-thickness=10
+bs-hl-color=f38ba8

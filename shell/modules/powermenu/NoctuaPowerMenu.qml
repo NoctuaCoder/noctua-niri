@@ -100,7 +100,7 @@ Scope {
                                     text: "Lock"
                                     radius: 10
                                     onClicked: {
-                                        powerProc.command = ["sh", "-c", "touch /tmp/noctua_lock_toggle"]
+                                        powerProc.command = ["swaylock"]
                                         powerProc.running = true
                                         root.isOpen = false
                                     }

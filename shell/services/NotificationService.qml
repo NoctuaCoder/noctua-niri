@@ -6,7 +6,8 @@ import QtQuick
 QtObject {
     id: root
 
-    property var notifications: []
+    property var notifications: [] // Banners ativos
+    property var history: []       // Histórico completo
 
     readonly property string daemonPath: Quickshell.env("HOME") + "/.config/quickshell/services/notification_daemon.py"
 
@@ -14,7 +15,15 @@ QtObject {
         notifications = notifications.filter(n => n.id !== id)
     }
 
-    // Auto-dismiss timer a cada 500ms para verificar expirados
+    function clearHistory() {
+        history = []
+    }
+
+    function dismissFromHistory(id) {
+        history = history.filter(n => n.id !== id)
+    }
+
+    // Auto-dismiss timer a cada 500ms para banners
     Timer {
         interval: 500
         running: true
@@ -23,8 +32,8 @@ QtObject {
             let now = Date.now()
             let current = root.notifications.slice()
             let filtered = current.filter(n => {
-                if (n.expiresAt === 0) return true // sticky
-                if (n.paused) return true // pausa se o mouse estiver em cima
+                if (n.expiresAt === 0) return true
+                if (n.paused) return true
                 return n.expiresAt > now
             })
             if (filtered.length !== current.length) {
@@ -33,13 +42,11 @@ QtObject {
         }
     }
 
-    // Inicia o daemon Python automaticamente
     Process {
         running: true
         command: ["python3", root.daemonPath]
     }
 
-    // Processo de escuta do socket com reconexão automática
     Process {
         id: socketListener
         running: true
@@ -54,7 +61,8 @@ QtObject {
                     }
                     if (msg.type === "notify" || msg.id !== undefined) {
                         let notif = msg
-                        let current = root.notifications.filter(n => n.id !== notif.id)
+                        let currentNotifs = root.notifications.filter(n => n.id !== notif.id)
+                        let currentHistory = root.history.filter(n => n.id !== notif.id)
                         
                         let timeout = notif.expireTimeout
                         let duration = 5000
@@ -62,11 +70,18 @@ QtObject {
                         else if (timeout > 0) duration = timeout
 
                         notif.expiresAt = duration === 0 ? 0 : (Date.now() + duration)
+                        notif.timestamp = Qt.formatTime(new Date(), "hh:mm")
                         notif.paused = false
                         
-                        current.unshift(notif)
-                        if (current.length > 5) current.pop()
-                        root.notifications = current
+                        // Adiciona ao banner
+                        currentNotifs.unshift(notif)
+                        if (currentNotifs.length > 5) currentNotifs.pop()
+                        root.notifications = currentNotifs
+
+                        // Adiciona ao histórico (limite de 50)
+                        currentHistory.unshift(notif)
+                        if (currentHistory.length > 50) currentHistory.pop()
+                        root.history = currentHistory
                     }
                 } catch (e) {
                     console.log("Error parsing notification message:", e)

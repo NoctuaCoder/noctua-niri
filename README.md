@@ -1,6 +1,6 @@
-# Noctua-Niri 🌌 (Prime Edition v1.1-Elite)
+# Noctua-Niri 🌌 (Sovereign Edition v2.0-Ultimate)
 
-Uma suíte de dotfiles soberana, elegante e de alta performance construída exclusivamente para o **Niri** — o compositor Wayland com rolagem infinita de colunas (*scrollable-tiling*). O **Noctua-Niri Prime** redefine o padrão de excelência no Linux, combinando componentes modulares em QML, arquitetura de configuração externa via JSON com **Hot-Reload**, painel lateral de telemetria em tempo real, **NoctuaLauncher profissional** (com ícones reais, parser `.desktop`, cache em memória e navegação completa por teclado), **NoctuaOSD nativo** para hardware (Volume e Brilho), **NoctuaPowerMenu** para controle de sessão e a estética exclusiva Catppuccin Mocha.
+Uma suíte de dotfiles soberana, elegante e de alta performance construída exclusivamente para o **Niri**. O **Noctua-Niri Prime** atinge seu ápice na versão **v2.0-Ultimate**, consolidando segurança real, telemetria avançada e um ecossistema de shell 100% nativo e independente.
 
 ---
 
@@ -12,45 +12,16 @@ Uma suíte de dotfiles soberana, elegante e de alta performance construída excl
 
 ---
 
-## 💎 Arquitetura e Diferenciais Soberanos
+## 💎 Diferenciais da Versão v2.0-Ultimate
 
-1. **Configuração Externa com Hot-Reload (`theme.json`)**:
-   - Centraliza cores, opacidades, raios de borda e fontes. Altere qualquer propriedade no arquivo de configuração e veja a shell se atualizar instantaneamente.
-2. **Biblioteca de Componentes Nativos (`shell/components/`)**:
-   - `NoctuaCard.qml`: Cartões com glassmorphism avançado, bordas reativas ao hover e opacidade dinâmica.
-   - `NoctuaButton.qml`: Botões interativos com transições suaves de cor e ícones integrados.
-3. **Módulos de Shell Soberanos**:
-   - `NoctuaBar`: Barra superior flutuante com relógio dinâmico, workspaces clicáveis e indicadores de áudio/bateria/rede.
-   - `NoctuaDashboard`: Painel lateral flutuante com telemetria em tempo real (CPU, RAM, Disco) e animações de suavização.
-   - `NoctuaLauncher`: Menu de aplicativos com parser Python robusto, ícones reais do sistema, cache em memória, navegação por setas (`Up`/`Down`), execução via `Enter`, fechamento ao clicar fora e animações de entrada (*Fade & Scale*).
-   - `NoctuaOSD`: Indicador flutuante em tempo real para controle de volume e brilho com animações fluidas.
-   - `NoctuaPowerMenu`: Menu de sessão flutuante (`Mod+Shift+P`) para Lock, Logout, Reboot e Shutdown.
-
----
-
-## 📂 Estrutura do Repositório
-
-```tree
-noctua-niri/
-├── .config/
-│   ├── niri/
-│   │   └── config.kdl      # Configuração central do Niri (com atalhos nativos)
-│   └── quickshell/
-│       └── theme.json      # Arquivo de configuração de temas com Hot-Reload
-├── shell/                  # Noctua-Shell (Quickshell QML)
-│   ├── shell.qml           # Ponto de entrada da shell
-│   ├── components/         # Biblioteca de componentes visuais
-│   │   ├── NoctuaCard.qml  # Cartão base dinâmico
-│   │   └── NoctuaButton.qml# Botões interativos dinâmicos
-│   ├── services/           # Serviços reativos (ConfigService, Niri, Audio, Bateria, etc.)
-│   └── modules/            # Módulos de barra, sidebar, launcher, OSD e power menu
-├── docs/
-│   ├── preview.png         # Screenshot de apresentação visual
-│   └── EYECANDY.md         # Guia visual r/unixporn
-├── ROADMAP.md              # Planejamento estratégico de evolução
-├── install.sh              # Script interativo com backup e suporte multi-distro
-└── README.md               # Documentação principal
-```
+1. **Segurança Real (Hybrid Lock)**:
+   - O sistema de bloqueio agora utiliza o **swaylock** como backend de segurança (autenticação PAM real), mantendo a estética Noctua através de uma configuração de cores Catppuccin Mocha personalizada.
+2. **Centro de Notificações (NoctuaCenter)**:
+   - Integrado ao Dashboard lateral, o novo centro de notificações mantém um histórico persistente das suas mensagens, com suporte a limpeza total e telemetria de sistema em tempo real.
+3. **NoctuaLauncher Pro**:
+   - Menu de aplicativos com ícones reais, cache em memória e navegação completa por teclado.
+4. **Ecossistema Nativo QML**:
+   - Barra, Dashboard, OSD de Hardware, Power Menu, Notificações e Lockscreen, todos integrados em uma única arquitetura modular com **Hot-Reload** de temas via JSON.
 
 ---
 

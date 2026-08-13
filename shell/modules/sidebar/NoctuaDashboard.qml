@@ -7,207 +7,259 @@ import "../../components"
 Scope {
     id: root
 
+    property bool isOpen: false
+
+    function toggle() {
+        isOpen = !isOpen
+    }
+
+    // Gatilho externo para o Dashboard (opcional)
+    Timer {
+        interval: 100
+        running: true
+        repeat: true
+        onTriggered: {
+            checkDashProc.running = true
+        }
+    }
+
+    Process {
+        id: checkDashProc
+        command: ["sh", "-c", "if [ -f /tmp/noctua_dash_toggle ]; then rm /tmp/noctua_dash_toggle && echo 'TOGGLE'; fi"]
+        stdout: SplitParser {
+            onRead: data => {
+                if (data.trim() === "TOGGLE") {
+                    root.toggle()
+                }
+            }
+        }
+    }
+
     Variants {
         model: Quickshell.screens
         delegate: PanelWindow {
             id: panel
             screen: modelData
             color: "transparent"
-            width: 320
-            height: screen.height - 72
+            visible: root.isOpen
+            width: 340
+            height: screen.height - 40
             anchors {
-                top: true
                 right: true
-                topMargin: 68
-                rightMargin: 16
+                top: true
+                topMargin: 20
+                rightMargin: 20
             }
 
             NoctuaCard {
                 anchors.fill: parent
                 cardColor: ConfigService.background
                 borderColor: ConfigService.accent
-                cardOpacity: ConfigService.shellOpacity
-                cardRadius: ConfigService.shellRadius
+                cardOpacity: 0.98
+                cardRadius: 24
                 hoverEffect: false
 
                 ColumnLayout {
                     anchors.fill: parent
-                    anchors.margins: 20
+                    anchors.margins: 24
                     spacing: 16
 
-                    // Header do Dashboard
+                    // Header
                     RowLayout {
+                        Layout.fillWidth: true
                         spacing: 12
+                        
                         Rectangle {
-                            width: 42
-                            height: 42
-                            radius: 14
+                            width: 44
+                            height: 44
+                            radius: 12
                             color: ConfigService.surface
                             border.width: 1
-                            border.color: ConfigService.blue
+                            border.color: ConfigService.accent
 
                             Text {
                                 anchors.centerIn: parent
-                                text: ""
+                                text: "󰣆"
                                 font.family: ConfigService.fontFamily
                                 font.pixelSize: 22
-                                color: ConfigService.blue
+                                color: ConfigService.accent
                             }
                         }
 
                         ColumnLayout {
-                            spacing: 2
+                            spacing: 0
                             Text {
-                                text: "Noctua-Niri"
+                                text: "Noctua Prime"
                                 font.family: ConfigService.fontFamily
                                 font.bold: true
                                 font.pixelSize: 16
                                 color: ConfigService.text
                             }
                             Text {
-                                text: "Prime Edition"
+                                text: "Sovereign Edition v2.0"
                                 font.family: ConfigService.fontFamily
-                                font.pixelSize: 11
+                                font.pixelSize: 10
                                 color: ConfigService.peach
                             }
                         }
                     }
 
-                    Rectangle {
-                        Layout.fillWidth: true
-                        height: 1
-                        color: ConfigService.surface
-                    }
+                    Rectangle { Layout.fillWidth: true; height: 1; color: ConfigService.surface }
 
-                    // Seção de System Monitor
-                    Text {
-                        text: "System Telemetry"
-                        font.family: ConfigService.fontFamily
-                        font.bold: true
-                        font.pixelSize: 13
-                        color: ConfigService.peach
-                    }
-
-                    // CPU Usage
+                    // System Monitors
                     ColumnLayout {
                         Layout.fillWidth: true
-                        spacing: 6
-                        RowLayout {
-                            Layout.fillWidth: true
-                            Text { text: "󰻠 CPU Cores"; font.family: ConfigService.fontFamily; font.pixelSize: 12; color: ConfigService.text }
-                            Item { Layout.fillWidth: true }
-                            Text { text: SystemMonitorService.cpuUsage + "%"; font.family: ConfigService.fontFamily; font.bold: true; font.pixelSize: 12; color: ConfigService.blue }
-                        }
-                        Rectangle {
-                            Layout.fillWidth: true
-                            height: 8
-                            radius: 4
-                            color: ConfigService.surface
-                            Rectangle {
-                                width: parent.width * (SystemMonitorService.cpuUsage / 100)
-                                height: parent.height
-                                radius: 4
-                                color: ConfigService.blue
+                        spacing: 12
 
-                                Behavior on width {
-                                    NumberAnimation { duration: 300; easing.type: Easing.OutQuad }
-                                }
-                            }
-                        }
-                    }
-
-                    // RAM Usage
-                    ColumnLayout {
-                        Layout.fillWidth: true
-                        spacing: 6
-                        RowLayout {
-                            Layout.fillWidth: true
-                            Text { text: "󰍛 Memory"; font.family: ConfigService.fontFamily; font.pixelSize: 12; color: ConfigService.text }
-                            Item { Layout.fillWidth: true }
-                            Text { text: SystemMonitorService.ramUsage + "%"; font.family: ConfigService.fontFamily; font.bold: true; font.pixelSize: 12; color: ConfigService.accent }
-                        }
-                        Rectangle {
-                            Layout.fillWidth: true
-                            height: 8
-                            radius: 4
-                            color: ConfigService.surface
-                            Rectangle {
-                                width: parent.width * (SystemMonitorService.ramUsage / 100)
-                                height: parent.height
-                                radius: 4
-                                color: ConfigService.accent
-
-                                Behavior on width {
-                                    NumberAnimation { duration: 300; easing.type: Easing.OutQuad }
-                                }
-                            }
-                        }
-                    }
-
-                    // Disk Usage
-                    ColumnLayout {
-                        Layout.fillWidth: true
-                        spacing: 6
-                        RowLayout {
-                            Layout.fillWidth: true
-                            Text { text: "󰋊 Root Storage"; font.family: ConfigService.fontFamily; font.pixelSize: 12; color: ConfigService.text }
-                            Item { Layout.fillWidth: true }
-                            Text { text: SystemMonitorService.diskUsage; font.family: ConfigService.fontFamily; font.bold: true; font.pixelSize: 12; color: ConfigService.green }
-                        }
-                    }
-
-                    Rectangle {
-                        Layout.fillWidth: true
-                        height: 1
-                        color: ConfigService.surface
-                    }
-
-                    // Quick Actions
-                    Text {
-                        text: "Quick Toggles"
-                        font.family: ConfigService.fontFamily
-                        font.bold: true
-                        font.pixelSize: 13
-                        color: ConfigService.peach
-                    }
-
-                    GridLayout {
-                        Layout.fillWidth: true
-                        columns: 2
-                        rowSpacing: 8
-                        columnSpacing: 8
-
-                        NoctuaButton {
-                            Layout.fillWidth: true
-                            height: 38
-                            icon: "󰖩"
-                            text: NetworkService.connectionType
-                            radius: 10
-                        }
-
-                        NoctuaButton {
-                            Layout.fillWidth: true
-                            height: 38
-                            icon: "󰂯"
-                            text: "Bluetooth"
-                            radius: 10
-                        }
-                    }
-
-                    Item { Layout.fillHeight: true }
-
-                    // Rodapé
-                    RowLayout {
-                        Layout.alignment: Qt.AlignHCenter
                         Text {
-                            text: "Noctua-Niri • Sovereign Shell"
+                            text: "System Telemetry"
                             font.family: ConfigService.fontFamily
-                            font.pixelSize: 10
-                            color: ConfigService.subtext
+                            font.bold: true
+                            font.pixelSize: 13
+                            color: ConfigService.peach
                         }
+
+                        ColumnLayout {
+                            Layout.fillWidth: true
+                            spacing: 10
+
+                            // CPU
+                            ColumnLayout {
+                                Layout.fillWidth: true
+                                spacing: 4
+                                RowLayout {
+                                    Text { text: "󰻠 CPU Usage"; font.family: ConfigService.fontFamily; font.pixelSize: 11; color: ConfigService.text }
+                                    Item { Layout.fillWidth: true }
+                                    Text { text: SystemMonitorService.cpuUsage + "%"; font.family: ConfigService.fontFamily; font.bold: true; font.pixelSize: 11; color: ConfigService.blue }
+                                }
+                                Rectangle {
+                                    Layout.fillWidth: true; height: 6; radius: 3; color: ConfigService.surface
+                                    Rectangle {
+                                        width: parent.width * (SystemMonitorService.cpuUsage/100)
+                                        height: 6; radius: 3; color: ConfigService.blue
+                                        Behavior on width { NumberAnimation { duration: 300; easing.type: Easing.OutQuad } }
+                                    }
+                                }
+                            }
+
+                            // RAM
+                            ColumnLayout {
+                                Layout.fillWidth: true
+                                spacing: 4
+                                RowLayout {
+                                    Text { text: "󰍛 RAM Usage"; font.family: ConfigService.fontFamily; font.pixelSize: 11; color: ConfigService.text }
+                                    Item { Layout.fillWidth: true }
+                                    Text { text: SystemMonitorService.ramUsage + "%"; font.family: ConfigService.fontFamily; font.bold: true; font.pixelSize: 11; color: ConfigService.accent }
+                                }
+                                Rectangle {
+                                    Layout.fillWidth: true; height: 6; radius: 3; color: ConfigService.surface
+                                    Rectangle {
+                                        width: parent.width * (SystemMonitorService.ramUsage/100)
+                                        height: 6; radius: 3; color: ConfigService.accent
+                                        Behavior on width { NumberAnimation { duration: 300; easing.type: Easing.OutQuad } }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    Rectangle { Layout.fillWidth: true; height: 1; color: ConfigService.surface }
+
+                    // Notification History (NoctuaCenter)
+                    ColumnLayout {
+                        Layout.fillWidth: true
+                        Layout.fillHeight: true
+                        spacing: 12
+
+                        RowLayout {
+                            Layout.fillWidth: true
+                            Text {
+                                text: "Notification History"
+                                font.family: ConfigService.fontFamily
+                                font.bold: true
+                                font.pixelSize: 13
+                                color: ConfigService.mauve
+                            }
+                            Item { Layout.fillWidth: true }
+                            NoctuaButton {
+                                text: "Clear"
+                                radius: 6
+                                height: 22
+                                baseColor: "transparent"
+                                textColor: ConfigService.subtext
+                                onClicked: NotificationService.clearHistory()
+                            }
+                        }
+
+                        ListView {
+                            id: historyList
+                            Layout.fillWidth: true
+                            Layout.fillHeight: true
+                            clip: true
+                            model: NotificationService.history
+                            spacing: 8
+                            
+                            delegate: Rectangle {
+                                width: historyList.width
+                                height: notifCol.height + 16
+                                radius: 12
+                                color: ConfigService.surface
+                                border.width: 1
+                                border.color: ConfigService.accentBorder
+                                
+                                ColumnLayout {
+                                    id: notifCol
+                                    anchors.fill: parent
+                                    anchors.margins: 10
+                                    spacing: 4
+
+                                    RowLayout {
+                                        Layout.fillWidth: true
+                                        Text {
+                                            text: modelData.appName
+                                            font.bold: true; font.pixelSize: 10; color: ConfigService.peach
+                                        }
+                                        Item { Layout.fillWidth: true }
+                                        Text {
+                                            text: modelData.timestamp
+                                            font.pixelSize: 9; color: ConfigService.subtext
+                                        }
+                                    }
+                                    Text {
+                                        text: modelData.summary
+                                        font.bold: true; font.pixelSize: 12; color: ConfigService.text; Layout.fillWidth: true; wrapMode: Text.WordWrap
+                                    }
+                                    Text {
+                                        text: modelData.body
+                                        font.pixelSize: 11; color: ConfigService.subtext; Layout.fillWidth: true; wrapMode: Text.WordWrap; visible: text !== ""
+                                    }
+                                }
+                            }
+
+                            Text {
+                                anchors.centerIn: parent
+                                text: "No notifications"
+                                font.family: ConfigService.fontFamily
+                                font.pixelSize: 12
+                                color: ConfigService.subtext
+                                visible: NotificationService.history.length === 0
+                            }
+                        }
+                    }
+
+                    // Footer / Quick Actions
+                    RowLayout {
+                        Layout.fillWidth: true
+                        spacing: 10
+                        NoctuaButton { Layout.fillWidth: true; text: "Lock"; icon: "󰌾"; onClicked: { root.isOpen = false; shellRoot.noctuaLock.lock(); } }
+                        NoctuaButton { Layout.fillWidth: true; text: "Power"; icon: "󰐥"; onClicked: { root.isOpen = false; shellRoot.noctuaPowerMenu.toggle(); } }
                     }
                 }
             }
+
+            // Animação de Entrada (Slide)
+            x: root.isOpen ? (screen.width - width - 20) : screen.width
+            Behavior on x { NumberAnimation { duration: 300; easing.type: Easing.OutQuint } }
         }
     }
 }

@@ -47,13 +47,16 @@ echo "[*] Criando diretórios e aplicando backups..."
 mkdir -p ~/.config/niri
 mkdir -p ~/.config/waybar
 mkdir -p ~/.config/quickshell
+mkdir -p ~/.config/swaylock
 
 backup_existing "$HOME/.config/niri/config.kdl"
 backup_existing "$HOME/.config/waybar/config"
 backup_existing "$HOME/.config/waybar/style.css"
+backup_existing "$HOME/.config/swaylock/config"
 
 cp -r .config/niri/* ~/.config/niri/
 cp -r .config/waybar/* ~/.config/waybar/
+cp -r .config/swaylock/* ~/.config/swaylock/
 
 if [ -d "shell" ]; then
     cp -r shell/* ~/.config/quickshell/
