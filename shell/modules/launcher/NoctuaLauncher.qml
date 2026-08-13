@@ -14,8 +14,13 @@ Scope {
         isOpen = !isOpen
         if (isOpen) {
             appService.loadApps()
+            currentIndex = 0
+            searchInput.text = ""
+            searchInput.forceActiveFocus()
         }
     }
+
+    property int currentIndex: 0
 
     Timer {
         interval: 100
@@ -55,10 +60,10 @@ Scope {
             }
             let q = query.toLowerCase()
             filteredApps = allApps.filter(app => app.name.toLowerCase().includes(q) || app.exec.toLowerCase().includes(q))
+            currentIndex = 0
         }
     }
 
-    // Parser Python robusto para arquivos .desktop (filtra NoDisplay, Terminal=true indesejados, e mapeia ícones)
     Process {
         id: appsProc
         command: ["python3", "-c", "
@@ -85,7 +90,6 @@ for path in glob.glob('/usr/share/applications/*.desktop') + glob.glob(os.path.e
         if not name or not exec_cmd:
             continue
             
-        # Limpa argumentos do Exec (%f, %U, etc.)
         exec_clean = exec_cmd.split('%')[0].strip()
         
         if name not in seen:
@@ -121,142 +125,194 @@ print(json.dumps(apps))
             screen: modelData
             color: "transparent"
             visible: root.isOpen
-            width: 620
-            height: 480
-            anchors {
-                centerIn: true
-            }
+            width: screen.width
+            height: screen.height
 
-            NoctuaCard {
+            // Área externa translúcida para fechar ao clicar fora
+            MouseArea {
                 anchors.fill: parent
-                cardColor: ConfigService.background
-                borderColor: ConfigService.accent
-                cardOpacity: 0.96
-                cardRadius: 20
-                hoverEffect: false
+                enabled: root.isOpen
+                onClicked: {
+                    root.isOpen = false
+                }
 
-                ColumnLayout {
-                    anchors.fill: parent
-                    anchors.margins: 22
-                    spacing: 16
+                // Conteúdo centralizado do Launcher
+                Item {
+                    id: launcherContainer
+                    width: 620
+                    height: 480
+                    anchors.centerIn: parent
 
-                    // Cabeçalho de Pesquisa
-                    Rectangle {
-                        Layout.fillWidth: true
-                        height: 48
-                        color: ConfigService.surface
-                        radius: 12
-                        border.width: 1
-                        border.color: ConfigService.accent
+                    // Impede que cliques dentro do card fechem o launcher
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: mouse.accepted = true
+                    }
 
-                        RowLayout {
+                    NoctuaCard {
+                        anchors.fill: parent
+                        cardColor: ConfigService.background
+                        borderColor: ConfigService.accent
+                        cardOpacity: 0.98
+                        cardRadius: 22
+                        hoverEffect: false
+
+                        ColumnLayout {
                             anchors.fill: parent
-                            anchors.leftMargin: 16
-                            anchors.rightMargin: 16
-                            spacing: 12
+                            anchors.margins: 22
+                            spacing: 16
 
-                            Text {
-                                text: "󰍉"
-                                font.family: ConfigService.fontFamily
-                                font.pixelSize: 18
-                                color: ConfigService.accent
-                            }
-
-                            TextInput {
-                                id: searchInput
+                            // Cabeçalho de Pesquisa
+                            Rectangle {
                                 Layout.fillWidth: true
-                                font.family: ConfigService.fontFamily
-                                font.pixelSize: 15
-                                color: ConfigService.text
-                                focus: true
-                                selectByMouse: true
+                                height: 48
+                                color: ConfigService.surface
+                                radius: 12
+                                border.width: 1
+                                border.color: ConfigService.accent
 
-                                onTextChanged: {
-                                    appService.filter(text)
-                                }
+                                RowLayout {
+                                    anchors.fill: parent
+                                    anchors.leftMargin: 16
+                                    anchors.rightMargin: 16
+                                    spacing: 12
 
-                                Keys.onEscapePressed: {
-                                    root.isOpen = false
-                                }
-
-                                Keys.onReturnPressed: {
-                                    if (appService.filteredApps.length > 0) {
-                                        let target = appService.filteredApps[0].exec
-                                        execProc.command = ["sh", "-c", target]
-                                        execProc.running = true
-                                        root.isOpen = false
-                                        text = ""
-                                    }
-                                }
-                            }
-                        }
-                    }
-
-                    // Lista de Aplicativos Otimizada
-                    ListView {
-                        id: appListView
-                        Layout.fillWidth: true
-                        Layout.fillHeight: true
-                        clip: true
-                        model: appService.filteredApps
-                        spacing: 6
-
-                        delegate: Rectangle {
-                            width: appListView.width
-                            height: 44
-                            radius: 10
-                            color: appMouse.containsMouse ? ConfigService.surfaceHover : "transparent"
-
-                            RowLayout {
-                                anchors.fill: parent
-                                anchors.leftMargin: 14
-                                anchors.rightMargin: 14
-                                spacing: 12
-
-                                Image {
-                                    width: 28
-                                    height: 28
-                                    // Tenta carregar o ícone do tema do sistema ou usa fallback
-                                    source: "image://icon/" + modelData.icon
-                                    sourceSize.width: 28
-                                    sourceSize.height: 28
-
-                                    // Fallback caso o provedor de ícones não resolva diretamente
-                                    defaultSource: "qrc:/qt-project.org/imports/QuickControls2/images/navigation-indicator.png"
-                                }
-
-                                ColumnLayout {
-                                    Layout.fillWidth: true
-                                    spacing: 2
                                     Text {
-                                        text: modelData.name
+                                        text: "󰍉"
                                         font.family: ConfigService.fontFamily
-                                        font.pixelSize: 14
-                                        font.bold: true
+                                        font.pixelSize: 18
+                                        color: ConfigService.accent
+                                    }
+
+                                    TextInput {
+                                        id: searchInput
+                                        Layout.fillWidth: true
+                                        font.family: ConfigService.fontFamily
+                                        font.pixelSize: 15
                                         color: ConfigService.text
-                                    }
-                                    Text {
-                                        text: modelData.exec
-                                        font.family: ConfigService.fontFamily
-                                        font.pixelSize: 11
-                                        color: ConfigService.subtext
+                                        focus: true
+                                        selectByMouse: true
+
+                                        onTextChanged: {
+                                            appService.filter(text)
+                                        }
+
+                                        Keys.onEscapePressed: {
+                                            root.isOpen = false
+                                        }
+
+                                        Keys.onDownPressed: {
+                                            if (appService.filteredApps.length > 0) {
+                                                root.currentIndex = (root.currentIndex + 1) % appService.filteredApps.length
+                                                appListView.positionViewAtIndex(root.currentIndex, ListView.Contain)
+                                            }
+                                        }
+
+                                        Keys.onUpPressed: {
+                                            if (appService.filteredApps.length > 0) {
+                                                root.currentIndex = (root.currentIndex - 1 + appService.filteredApps.length) % appService.filteredApps.length
+                                                appListView.positionViewAtIndex(root.currentIndex, ListView.Contain)
+                                            }
+                                        }
+
+                                        Keys.onReturnPressed: {
+                                            if (appService.filteredApps.length > 0 && root.currentIndex >= 0 && root.currentIndex < appService.filteredApps.length) {
+                                                let target = appService.filteredApps[root.currentIndex].exec
+                                                execProc.command = ["sh", "-c", target]
+                                                execProc.running = true
+                                                root.isOpen = false
+                                            }
+                                        }
                                     }
                                 }
                             }
 
-                            MouseArea {
-                                id: appMouse
-                                anchors.fill: parent
-                                hoverEnabled: true
-                                onClicked: {
-                                    execProc.command = ["sh", "-c", modelData.exec]
-                                    execProc.running = true
-                                    root.isOpen = false
-                                    searchInput.text = ""
+                            // Lista de Aplicativos com Navegação por Teclado
+                            ListView {
+                                id: appListView
+                                Layout.fillWidth: true
+                                Layout.fillHeight: true
+                                clip: true
+                                model: appService.filteredApps
+                                spacing: 6
+
+                                delegate: Rectangle {
+                                    width: appListView.width
+                                    height: 44
+                                    radius: 10
+                                    color: index === root.currentIndex ? ConfigService.surfaceHover : (appMouse.containsMouse ? ConfigService.surface : "transparent")
+                                    border.width: index === root.currentIndex ? 1 : 0
+                                    border.color: ConfigService.accentBorder
+
+                                    Behavior on color {
+                                        ColorAnimation { duration: 100 }
+                                    }
+
+                                    RowLayout {
+                                        anchors.fill: parent
+                                        anchors.leftMargin: 14
+                                        anchors.rightMargin: 14
+                                        spacing: 12
+
+                                        Rectangle {
+                                            width: 28
+                                            height: 28
+                                            radius: 6
+                                            color: ConfigService.surface
+                                            border.width: 1
+                                            border.color: ConfigService.accentBorder
+
+                                            Text {
+                                                anchors.centerIn: parent
+                                                text: "󰣆"
+                                                font.family: ConfigService.fontFamily
+                                                font.pixelSize: 14
+                                                color: ConfigService.blue
+                                            }
+                                        }
+
+                                        ColumnLayout {
+                                            Layout.fillWidth: true
+                                            spacing: 2
+                                            Text {
+                                                text: modelData.name
+                                                font.family: ConfigService.fontFamily
+                                                font.pixelSize: 14
+                                                font.bold: true
+                                                color: ConfigService.text
+                                            }
+                                            Text {
+                                                text: modelData.exec
+                                                font.family: ConfigService.fontFamily
+                                                font.pixelSize: 11
+                                                color: ConfigService.subtext
+                                            }
+                                        }
+                                    }
+
+                                    MouseArea {
+                                        id: appMouse
+                                        anchors.fill: parent
+                                        hoverEnabled: true
+                                        onEntered: {
+                                            root.currentIndex = index
+                                        }
+                                        onClicked: {
+                                            execProc.command = ["sh", "-c", modelData.exec]
+                                            execProc.running = true
+                                            root.isOpen = false
+                                        }
+                                    }
                                 }
                             }
                         }
                     }
+
+                    // Animação de Entrada (Fade & Scale)
+                    opacity: root.isOpen ? 1 : 0
+                    scale: root.isOpen ? 1 : 0.95
+                    Behavior on opacity { NumberAnimation { duration: 150; easing.type: Easing.OutQuad } }
+                    Behavior on scale { NumberAnimation { duration: 150; easing.type: Easing.OutQuad } }
                 }
             }
         }

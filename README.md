@@ -1,6 +1,6 @@
-# Noctua-Niri 🌌 (Prime Edition v1.0-Stable)
+# Noctua-Niri 🌌 (Prime Edition v1.0-Pro)
 
-Uma suíte de dotfiles soberana, elegante e de alta performance construída exclusivamente para o **Niri** — o compositor Wayland com rolagem infinita de colunas (*scrollable-tiling*). O **Noctua-Niri Prime** redefine o padrão de excelência no Linux, combinando componentes modulares em QML, arquitetura de configuração externa via JSON com **Hot-Reload**, painel lateral de telemetria em tempo real, **NoctuaLauncher profissional** (com parser robusto `.desktop`), **NoctuaOSD nativo** para hardware e a estética exclusiva Catppuccin Mocha.
+Uma suíte de dotfiles soberana, elegante e de alta performance construída exclusivamente para o **Niri** — o compositor Wayland com rolagem infinita de colunas (*scrollable-tiling*). O **Noctua-Niri Prime** redefine o padrão de excelência no Linux, combinando componentes modulares em QML, arquitetura de configuração externa via JSON com **Hot-Reload**, painel lateral de telemetria em tempo real, **NoctuaLauncher profissional** (com navegação completa por teclado, setas, highlight ativo e fechamento inteligente), **NoctuaOSD nativo** para hardware e a estética exclusiva Catppuccin Mocha.
 
 ---
 
@@ -14,7 +14,7 @@ Uma suíte de dotfiles soberana, elegante e de alta performance construída excl
 3. **Módulos de Shell Soberanos**:
    - `NoctuaBar`: Barra superior flutuante com relógio dinâmico, workspaces clicáveis e indicadores de áudio/bateria/rede.
    - `NoctuaDashboard`: Painel lateral flutuante com telemetria em tempo real (CPU, RAM, Disco) e animações de suavização.
-   - `NoctuaLauncher`: Menu de aplicativos com parser Python robusto para arquivos `.desktop` (filtragem de `NoDisplay`, limpeza de argumentos e ícones).
+   - `NoctuaLauncher`: Menu de aplicativos com parser Python robusto, navegação por setas (`Up`/`Down`), execução via `Enter`, fechamento ao clicar fora e animações de entrada (*Fade & Scale*).
    - `NoctuaOSD`: Indicador flutuante em tempo real para controle de volume com animações fluidas.
 
 ---
