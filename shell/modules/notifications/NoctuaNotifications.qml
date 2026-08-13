@@ -46,9 +46,12 @@ Scope {
                         MouseArea {
                             anchors.fill: parent
                             hoverEnabled: true
-                            // Pausa o auto-dismiss ou apenas interage
-                            onEntered: {}
-                            onExited: {}
+                            onEntered: {
+                                modelData.paused = true
+                            }
+                            onExited: {
+                                modelData.paused = false
+                            }
                         }
 
                         ColumnLayout {
@@ -61,14 +64,29 @@ Scope {
                                 Layout.fillWidth: true
                                 spacing: 10
 
-                                Image {
+                                // Ícone real com fallback robusto
+                                Item {
                                     width: 22
                                     height: 22
-                                    source: modelData.appIcon 
-                                        ? (modelData.appIcon.startsWith("/") ? "file://" + modelData.appIcon : "image://icon/" + modelData.appIcon)
-                                        : ""
-                                    sourceSize.width: 22
-                                    sourceSize.height: 22
+
+                                    Image {
+                                        anchors.fill: parent
+                                        source: modelData.appIcon && modelData.appIcon !== ""
+                                            ? (modelData.appIcon.startsWith("/") ? "file://" + modelData.appIcon : "image://icon/" + modelData.appIcon)
+                                            : ""
+                                        sourceSize.width: 22
+                                        sourceSize.height: 22
+                                        visible: status === Image.Ready
+                                    }
+
+                                    Text {
+                                        anchors.centerIn: parent
+                                        text: "󰂚"
+                                        font.family: ConfigService.fontFamily
+                                        font.pixelSize: 16
+                                        color: ConfigService.accent
+                                        visible: !parent.children[0].visible
+                                    }
                                 }
 
                                 Text {

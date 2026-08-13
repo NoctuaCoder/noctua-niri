@@ -8,7 +8,7 @@ QtObject {
 
     property var notifications: []
 
-    readonly property string daemonPath: Quickshell.env("HOME") + "/.config/quickshell/notification_daemon.py"
+    readonly property string daemonPath: Quickshell.env("HOME") + "/.config/quickshell/services/notification_daemon.py"
 
     function dismiss(id) {
         notifications = notifications.filter(n => n.id !== id)
@@ -24,6 +24,7 @@ QtObject {
             let current = root.notifications.slice()
             let filtered = current.filter(n => {
                 if (n.expiresAt === 0) return true // sticky
+                if (n.paused) return true // pausa se o mouse estiver em cima
                 return n.expiresAt > now
             })
             if (filtered.length !== current.length) {
@@ -53,15 +54,15 @@ QtObject {
                     }
                     if (msg.type === "notify" || msg.id !== undefined) {
                         let notif = msg
-                        // Substitui se já existir ID igual
                         let current = root.notifications.filter(n => n.id !== notif.id)
                         
                         let timeout = notif.expireTimeout
                         let duration = 5000
-                        if (timeout === 0) duration = 0 // sticky
+                        if (timeout === 0) duration = 0
                         else if (timeout > 0) duration = timeout
 
                         notif.expiresAt = duration === 0 ? 0 : (Date.now() + duration)
+                        notif.paused = false
                         
                         current.unshift(notif)
                         if (current.length > 5) current.pop()
@@ -79,7 +80,7 @@ QtObject {
 
     Timer {
         id: reconnectTimer
-        interval: 500
+        interval: 300
         onTriggered: socketListener.running = true
     }
 }

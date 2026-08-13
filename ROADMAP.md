@@ -18,18 +18,17 @@ Este documento estabelece o plano estratégico de desenvolvimento do **Noctua-Ni
 ### 1. Personalização Real (Concluído)
 - [x] **Configuração Externa (`theme.json`)**: Sistema centralizado para gerenciar cores, opacidades, raios de borda e fontes.
 - [x] **Hot-Reload de Temas**: Atualização instantânea da interface ao salvar modificações no arquivo de configuração.
-- [ ] **Suporte a Matugen / Material You**: Geração automática de paletas de cores a partir do wallpaper atual.
 
 ### 2. Estética e Micro-interações Avançadas (Concluído)
 - [x] **Glassmorphism Profundo**: Transparências reativas combinadas com bordas neon e glow sutil.
 - [x] **Biblioteca QML Reativa (`NoctuaCard`, `NoctuaButton`)**: Componentes modulares com animações de hover e transições suaves.
-- [x] **Animações de Entrada/Saída**: Eixos de *fade* e *scale* fluidos no launcher, OSD e notificações.
 
-### 3. Completude de Shell (Concluído na Fase A)
+### 3. Completude de Shell (Concluído na Fase A & B)
 - [x] **NoctuaLauncher Nativo**: Menu de aplicativos com parser Python robusto, cache em memória, navegação por teclado e click-outside.
-- [x] **NoctuaOSD Nativo**: Indicador flutuante em tempo real para controle de áudio e brilho.
+- [x] **NoctuaOSD Nativo**: Indicador flutuante em tempo real para controle de áudio e brilho (`brightnessctl`).
 - [x] **NoctuaPowerMenu Nativo**: Controles dedicados de sessão (`Mod+Shift+P`) para Lock, Logout, Reboot e Shutdown.
-- [x] **NoctuaNotifications Nativo**: Daemon DBus dedicado (`org.freedesktop.Notifications`) integrando banners flutuantes diretamente ao Quickshell (adeus swaync).
+- [x] **NoctuaNotifications Nativo 2.0**: Daemon DBus resiliente com auto-dismiss por timer, ícones reais e pause no hover (adeus swaync).
+- [x] **NoctuaLock Nativo**: Tela de bloqueio QML integrada com relógio, data e estética Prime (`Mod+Alt+L`).
 
 ---
 
@@ -37,9 +36,8 @@ Este documento estabelece o plano estratégico de desenvolvimento do **Noctua-Ni
 
 | Versão | Foco Principal | Status |
 | :--- | :--- | :--- |
-| **v0.1-MVP** | Compositor Niri + Waybar + Base QML | Concluído |
-| **v0.5-EyeCandy** | Quickshell reativo + Dashboard + Services | Concluído |
 | **v1.0-Pro** | Launcher nativo + Hot-reload + Teclado | Concluído |
 | **v1.1-Elite** | OSD de hardware + Cache de apps + Ícones reais | Concluído |
-| **v1.2-Sovereign** | **Notificações nativas DBus + Power Menu** | **Atual** |
-| **v2.0-Ultimate** | Matugen + Wallpaper manager + Lockscreen QML | Próximo |
+| **v1.2-Sovereign** | Notificações DBus + Power Menu | Concluído |
+| **v1.3-Sovereign** | **Lockscreen nativo QML + Notificações Endurecidas** | **Atual** |
+| **v2.0-Ultimate** | Matugen + Wallpaper manager + Centro de Notificações | Próximo |
