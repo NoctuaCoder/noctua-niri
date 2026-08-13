@@ -8,6 +8,7 @@ import "modules/bar"
 import "modules/sidebar"
 import "modules/launcher"
 import "modules/osd"
+import "modules/powermenu"
 
 ShellRoot {
     // ── Configuration & Services ──────────────────────────────────────────────
@@ -23,8 +24,9 @@ ShellRoot {
     NoctuaDashboard       {}
     NoctuaLauncher        { id: noctuaLauncher }
     NoctuaOSD             { id: noctuaOSD }
+    NoctuaPowerMenu       { id: noctuaPowerMenu }
 
     Component.onCompleted: {
-        console.log("Noctua-Niri Prime Shell (with OSD & Launcher) initialized successfully.")
+        console.log("Noctua-Niri Prime Shell (with PowerMenu, OSD & Launcher) initialized successfully.")
     }
 }

@@ -13,7 +13,6 @@ Scope {
     function toggle() {
         isOpen = !isOpen
         if (isOpen) {
-            // Se o cache estiver vazio, carrega. Caso contrário, usa o cache instantaneamente.
             if (appService.allApps.length === 0) {
                 appService.loadApps()
             } else {
@@ -254,21 +253,12 @@ print(json.dumps(apps))
                                         anchors.rightMargin: 14
                                         spacing: 12
 
-                                        Rectangle {
+                                        Image {
                                             width: 28
                                             height: 28
-                                            radius: 6
-                                            color: ConfigService.surface
-                                            border.width: 1
-                                            border.color: ConfigService.accentBorder
-
-                                            Text {
-                                                anchors.centerIn: parent
-                                                text: "󰣆"
-                                                font.family: ConfigService.fontFamily
-                                                font.pixelSize: 14
-                                                color: ConfigService.blue
-                                            }
+                                            source: "image://icon/" + modelData.icon
+                                            sourceSize.width: 28
+                                            sourceSize.height: 28
                                         }
 
                                         ColumnLayout {
