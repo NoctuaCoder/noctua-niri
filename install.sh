@@ -2,8 +2,8 @@
 set -e
 
 echo "=================================================="
-echo "    Instalador Oficial - Noctua-Niri Dotfiles     "
-echo "    (Noctua Aesthetics + Quickshell + Waybar)     "
+echo "    Instalador Oficial - Noctua-Niri Prime        "
+echo "    (Sovereign Edition v1.2)                      "
 echo "=================================================="
 
 backup_existing() {
@@ -27,8 +27,8 @@ fi
 echo "[*] Gerenciador de pacotes detectado: $PKG_MANAGER"
 
 echo ""
-echo "Escolha a barra de status principal:"
-echo "1) Quickshell (Noctua-Shell flutuante com QML reativo)"
+echo "Escolha a interface principal da shell:"
+echo "1) Quickshell (Noctua-Shell flutuante soberana com OSD, Launcher e Notificações DBus)"
 echo "2) Waybar (Barra tradicional com Glassmorphism)"
 echo "3) Ambos"
 read -p "Opção [1-3, padrão 1]: " bar_choice
@@ -36,9 +36,9 @@ bar_choice=${bar_choice:-1}
 
 if [ "$PKG_MANAGER" = "pacman" ]; then
     echo "[*] Instalando dependências no Arch Linux..."
-    sudo pacman -S --needed niri fuzzel swaync swww kitty grim slurp wl-clipboard brightnessctl pamixer pavucontrol ttf-jetbrains-mono-nerd
+    sudo pacman -S --needed niri fuzzel swaync swww kitty grim slurp wl-clipboard brightnessctl pamixer pavucontrol ttf-jetbrains-mono-nerd python-dbus python-gobject nc
 elif [ "$PKG_MANAGER" = "dnf" ]; then
-    echo "[!] Fedora detectado. Certifique-se de instalar niri, waybar, fuzzel e quickshell."
+    echo "[!] Fedora detectado. Certifique-se de instalar niri, quickshell, python3-dbus e python3-gobject."
 elif [ "$PKG_MANAGER" = "apt" ]; then
     echo "[!] Debian/Ubuntu detectado. Instalação manual necessária para Niri e Quickshell."
 fi
@@ -59,6 +59,11 @@ if [ -d "shell" ]; then
     cp -r shell/* ~/.config/quickshell/
 fi
 
+# Garante permissão de execução no daemon Python de notificações
+if [ -f "$HOME/.config/quickshell/services/notification_daemon.py" ]; then
+    chmod +x "$HOME/.config/quickshell/services/notification_daemon.py"
+fi
+
 # Configuração robusta do startup no config.kdl
 CONFIG_KDL="$HOME/.config/niri/config.kdl"
 if [ -f "$CONFIG_KDL" ]; then
@@ -75,7 +80,7 @@ if [ -f "$CONFIG_KDL" ]; then
 fi
 
 echo "=================================================="
-echo "   Instalação concluída com sucesso!"
+echo "   Instalação concluída com sucesso! (v1.2)"
 echo "   Backups salvos com extensão .bak"
 echo "   Inicie o Niri a partir do seu gerenciador de login."
 echo "=================================================="

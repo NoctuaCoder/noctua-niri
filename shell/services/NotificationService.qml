@@ -8,17 +8,37 @@ QtObject {
 
     property var notifications: []
 
+    readonly property string daemonPath: Quickshell.env("HOME") + "/.config/quickshell/notification_daemon.py"
+
     function dismiss(id) {
         notifications = notifications.filter(n => n.id !== id)
     }
 
-    // Inicia o daemon Python automaticamente se não estiver rodando
-    Process {
+    // Auto-dismiss timer a cada 500ms para verificar expirados
+    Timer {
+        interval: 500
         running: true
-        command: ["python3", Quickshell.env("HOME") + "/.config/quickshell/notification_daemon.py"] // ou caminho absoluto
+        repeat: true
+        onTriggered: {
+            let now = Date.now()
+            let current = root.notifications.slice()
+            let filtered = current.filter(n => {
+                if (n.expiresAt === 0) return true // sticky
+                return n.expiresAt > now
+            })
+            if (filtered.length !== current.length) {
+                root.notifications = filtered
+            }
+        }
     }
 
-    // Processo para ler o socket UNIX
+    // Inicia o daemon Python automaticamente
+    Process {
+        running: true
+        command: ["python3", root.daemonPath]
+    }
+
+    // Processo de escuta do socket com reconexão automática
     Process {
         id: socketListener
         running: true
@@ -26,16 +46,40 @@ QtObject {
         stdout: SplitParser {
             onRead: data => {
                 try {
-                    let notif = JSON.parse(data.trim())
-                    // Adiciona na lista mantendo um limite de 5 notificações visíveis
-                    let current = root.notifications.slice()
-                    current.unshift(notif)
-                    if (current.length > 5) current.pop()
-                    root.notifications = current
+                    let msg = JSON.parse(data.trim())
+                    if (msg.type === "close") {
+                        root.dismiss(msg.id)
+                        return
+                    }
+                    if (msg.type === "notify" || msg.id !== undefined) {
+                        let notif = msg
+                        // Substitui se já existir ID igual
+                        let current = root.notifications.filter(n => n.id !== notif.id)
+                        
+                        let timeout = notif.expireTimeout
+                        let duration = 5000
+                        if (timeout === 0) duration = 0 // sticky
+                        else if (timeout > 0) duration = timeout
+
+                        notif.expiresAt = duration === 0 ? 0 : (Date.now() + duration)
+                        
+                        current.unshift(notif)
+                        if (current.length > 5) current.pop()
+                        root.notifications = current
+                    }
                 } catch (e) {
-                    console.log("Error parsing notification JSON:", e)
+                    console.log("Error parsing notification message:", e)
                 }
             }
         }
+        onExited: {
+            reconnectTimer.start()
+        }
+    }
+
+    Timer {
+        id: reconnectTimer
+        interval: 500
+        onTriggered: socketListener.running = true
     }
 }

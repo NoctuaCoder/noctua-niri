@@ -10,14 +10,22 @@ from gi.repository import GLib
 SOCKET_PATH = "/tmp/noctua_notifications.sock"
 
 class NotificationDaemon(dbus.service.Object):
-    def __init__(self):
-        dbus.service.Object.__init__(self, dbus.SessionBus(), "/org/freedesktop/Notifications")
+    def __init__(self, bus):
+        dbus.service.Object.__init__(self, bus, "/org/freedesktop/Notifications")
         self.next_id = 1
         self.clients = []
         
-        # Remove socket antigo se existir
         if os.path.exists(SOCKET_PATH):
-            os.remove(SOCKET_PATH)
+            try:
+                # Testa se o socket está ativo
+                test_sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
+                test_sock.connect(SOCKET_PATH)
+                test_sock.close()
+                # Se conectou, já tem outro daemon rodando
+                print("Notification daemon already running. Exiting.")
+                os._exit(0)
+            except Exception:
+                os.remove(SOCKET_PATH)
             
         self.server_sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
         self.server_sock.bind(SOCKET_PATH)
@@ -50,11 +58,15 @@ class NotificationDaemon(dbus.service.Object):
             self.next_id += 1
             
         notif = {
+            "type": "notify",
             "id": nid,
-            "appName": app_name,
-            "appIcon": app_icon,
-            "summary": summary,
-            "body": body
+            "appName": str(app_name),
+            "appIcon": str(app_icon or ""),
+            "summary": str(summary),
+            "body": str(body),
+            "expireTimeout": int(expire_timeout),
+            "actions": [str(a) for a in actions],
+            "urgency": int(hints.get("urgency", 1)) if hints else 1
         }
         
         self.broadcast(notif)
@@ -62,11 +74,16 @@ class NotificationDaemon(dbus.service.Object):
 
     @dbus.service.method("org.freedesktop.Notifications", in_signature="u", out_signature="")
     def CloseNotification(self, id):
+        self.broadcast({"type": "close", "id": int(id)})
+        self.NotificationClosed(id, 3) # 3 = closed by call to CloseNotification
+
+    @dbus.service.signal("org.freedesktop.Notifications", signature="uu")
+    def NotificationClosed(self, id, reason):
         pass
 
     @dbus.service.method("org.freedesktop.Notifications", in_signature="", out_signature="as")
-    def GetCapabilities(self, ):
-        return ["body", "actions", "icon-static"]
+    def GetCapabilities(self):
+        return ["body", "actions", "icon-static", "persistence"]
 
     @dbus.service.method("org.freedesktop.Notifications", in_signature="", out_signature="sss")
     def GetServerInformation(self):
@@ -75,8 +92,14 @@ class NotificationDaemon(dbus.service.Object):
 if __name__ == "__main__":
     dbus.mainloop.glib.DBusGMainLoop(set_as_default=True)
     session_bus = dbus.SessionBus()
-    name = dbus.service.BusName("org.freedesktop.Notifications", session_bus)
-    daemon = NotificationDaemon()
+    
+    try:
+        name = dbus.service.BusName("org.freedesktop.Notifications", session_bus, do_not_queue=True)
+    except dbus.exceptions.NameExistsException:
+        print("Notification service name already claimed on session bus. Exiting.")
+        os._exit(0)
+
+    daemon = NotificationDaemon(session_bus)
     loop = GLib.MainLoop()
     try:
         loop.run()

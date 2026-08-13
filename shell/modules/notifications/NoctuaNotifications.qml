@@ -22,7 +22,6 @@ Scope {
                 rightMargin: 16
             }
 
-            // ListView para empilhar as notificações com animações suaves
             ListView {
                 id: notifListView
                 anchors.fill: parent
@@ -44,6 +43,14 @@ Scope {
                         cardRadius: 16
                         hoverEffect: false
 
+                        MouseArea {
+                            anchors.fill: parent
+                            hoverEnabled: true
+                            // Pausa o auto-dismiss ou apenas interage
+                            onEntered: {}
+                            onExited: {}
+                        }
+
                         ColumnLayout {
                             id: colLayout
                             anchors.fill: parent
@@ -54,11 +61,14 @@ Scope {
                                 Layout.fillWidth: true
                                 spacing: 10
 
-                                Text {
-                                    text: "󰂚"
-                                    font.family: ConfigService.fontFamily
-                                    font.pixelSize: 16
-                                    color: ConfigService.accent
+                                Image {
+                                    width: 22
+                                    height: 22
+                                    source: modelData.appIcon 
+                                        ? (modelData.appIcon.startsWith("/") ? "file://" + modelData.appIcon : "image://icon/" + modelData.appIcon)
+                                        : ""
+                                    sourceSize.width: 22
+                                    sourceSize.height: 22
                                 }
 
                                 Text {
@@ -105,7 +115,6 @@ Scope {
                         }
                     }
 
-                    // Animação de entrada (Slide in da direita + Fade)
                     Component.onCompleted: {
                         enterAnim.start()
                     }
