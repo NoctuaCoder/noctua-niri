@@ -4,14 +4,6 @@ Uma suíte de dotfiles soberana, elegante e de alta performance construída excl
 
 ---
 
-## 🖼️ Preview Visual
-
-<p align="center">
-  <img src="docs/preview.png" alt="Noctua-Niri Preview" width="100%" style="border-radius: 12px;" />
-</p>
-
----
-
 ## 💎 Diferenciais da Versão v2.0-Ultimate
 
 1. **Segurança Real (Hybrid Lock)**:
