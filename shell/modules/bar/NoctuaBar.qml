@@ -36,6 +36,42 @@ Scope {
                 cardRadius: 18
                 hoverEffect: false
 
+                Canvas {
+                    id: seigaiha
+                    anchors.fill: parent
+                    anchors.margins: 1
+                    opacity: ConfigService.waveOpacity
+                    visible: ConfigService.paletteMode !== "off"
+                    onPaint: {
+                        var ctx = getContext("2d")
+                        ctx.clearRect(0, 0, width, height)
+                        ctx.lineWidth = 1
+                        ctx.strokeStyle = ConfigService.waveColor
+                        ctx.globalAlpha = 0.86
+                        for (var x = -16; x < width + 32; x += 32) {
+                            for (var y = 22; y < height + 24; y += 22) {
+                                ctx.beginPath()
+                                ctx.arc(x, y, 16, Math.PI, 0)
+                                ctx.stroke()
+                            }
+                        }
+                        ctx.strokeStyle = ConfigService.waveHighlight
+                        ctx.globalAlpha = 0.34
+                        for (var hx = 0; hx < width + 32; hx += 32) {
+                            ctx.beginPath()
+                            ctx.arc(hx, 22, 16, Math.PI, 0)
+                            ctx.stroke()
+                        }
+                    }
+                    Component.onCompleted: requestPaint()
+                    Connections {
+                        target: ConfigService
+                        function onWaveColorChanged() { seigaiha.requestPaint() }
+                        function onWaveHighlightChanged() { seigaiha.requestPaint() }
+                        function onWaveOpacityChanged() { seigaiha.requestPaint() }
+                    }
+                }
+
                 RowLayout {
                     anchors.fill: parent
                     anchors.leftMargin: 10

@@ -6,17 +6,21 @@ import QtQuick
 QtObject {
     id: root
 
-    property color background: "#1e1e2e"
-    property color surface: "#313244"
-    property color surfaceHover: "#45475a"
-    property color text: "#cdd6f4"
-    property color subtext: "#9399b2"
-    property color accent: "#cba6f7"
-    property color accentBorder: "#f5e0dc"
-    property color blue: "#89b4fa"
-    property color peach: "#fab387"
-    property color green: "#a6e3a1"
-    property color red: "#f38ba8"
+    property color background: "#27153D"
+    property color surface: "#355B67"
+    property color surfaceHover: "#4E7D85"
+    property color text: "#F6FFFA"
+    property color subtext: "#D8E6E8"
+    property color accent: "#A6C9B6"
+    property color accentBorder: "#F6B6B7"
+    property color blue: "#B6AAC7"
+    property color peach: "#F6B6B7"
+    property color green: "#A6C9B6"
+    property color red: "#D48D95"
+    property color waveColor: "#A6C9B6"
+    property color waveHighlight: "#F6FFFA"
+    property real waveOpacity: 0.24
+    property string paletteMode: "original"
 
     property real shellOpacity: 0.90
     property int shellRadius: 16
@@ -55,6 +59,10 @@ QtObject {
                         if (cfg.theme.peach) root.peach = cfg.theme.peach
                         if (cfg.theme.green) root.green = cfg.theme.green
                         if (cfg.theme.red) root.red = cfg.theme.red
+                        if (cfg.theme.wave_color) root.waveColor = cfg.theme.wave_color
+                        if (cfg.theme.wave_highlight) root.waveHighlight = cfg.theme.wave_highlight
+                        if (cfg.theme.wave_opacity !== undefined) root.waveOpacity = cfg.theme.wave_opacity
+                        if (cfg.theme.palette_mode) root.paletteMode = cfg.theme.palette_mode
                     }
                     if (cfg.shell) {
                         if (cfg.shell.opacity !== undefined) root.shellOpacity = cfg.shell.opacity

@@ -1,17 +1,21 @@
 {
   "theme": {
-    "name": "Catppuccin Mocha (Default)",
-    "background": "#1e1e2e",
-    "surface": "#313244",
-    "surface_hover": "#45475a",
-    "text": "#cdd6f4",
-    "subtext": "#9399b2",
-    "accent": "#cba6f7",
-    "accent_border": "#f5e0dc",
-    "blue": "#89b4fa",
-    "peach": "#fab387",
-    "green": "#a6e3a1",
-    "red": "#f38ba8"
+    "name": "Seigaiha · Noctua Original",
+    "background": "#27153D",
+    "surface": "#355B67",
+    "surface_hover": "#4E7D85",
+    "text": "#F6FFFA",
+    "subtext": "#D8E6E8",
+    "accent": "#A6C9B6",
+    "accent_border": "#F6B6B7",
+    "blue": "#B6AAC7",
+    "peach": "#F6B6B7",
+    "green": "#A6C9B6",
+    "red": "#D48D95",
+    "palette_mode": "original",
+    "wave_color": "#A6C9B6",
+    "wave_highlight": "#F6FFFA",
+    "wave_opacity": 0.24
   },
   "shell": {
     "opacity": 0.90,
