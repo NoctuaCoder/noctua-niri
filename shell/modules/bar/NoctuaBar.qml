@@ -1,4 +1,3 @@
-import Quickshell
 import Quickshell.Io
 import QtQuick
 import QtQuick.Layouts
@@ -15,7 +14,7 @@ Scope {
             screen: modelData
             color: "transparent"
             width: screen.width - 32
-            height: 44
+            height: 190
             anchors {
                 top: true
                 left: true
@@ -26,31 +25,31 @@ Scope {
             }
 
             NoctuaCard {
-                anchors.fill: parent
+                id: rail
+                x: 0
+                y: 0
+                width: parent.width
+                height: 44
                 cardColor: ConfigService.background
                 borderColor: ConfigService.accent
                 cardOpacity: ConfigService.shellOpacity
-                cardRadius: ConfigService.shellRadius
+                cardRadius: 18
                 hoverEffect: false
 
                 RowLayout {
                     anchors.fill: parent
-                    anchors.leftMargin: 16
-                    anchors.rightMargin: 16
-                    spacing: 16
+                    anchors.leftMargin: 10
+                    anchors.rightMargin: 10
+                    spacing: 8
 
-                    // Launcher icon com botão
-                    NoctuaButton {
-                        width: 32
-                        height: 32
+                    NoctuaRailModule {
+                        compactWidth: 42
+                        expandedWidth: 104
                         icon: ""
-                        baseColor: ConfigService.surface
-                        hoverColor: ConfigService.blue
-                        textColor: ConfigService.text
-                        radius: 8
-                        onClicked: {
-                            launcherProc.running = true
-                        }
+                        value: ""
+                        details: "LAUNCH"
+                        accentColor: ConfigService.blue
+                        onClicked: launcherProc.running = true
                     }
 
                     Process {
@@ -58,30 +57,34 @@ Scope {
                         command: ["sh", "-c", "touch /tmp/noctua_toggle"]
                     }
 
-                    // Workspaces dinâmicos do Niri com componentes refinados
+                    Rectangle {
+                        Layout.preferredWidth: 1
+                        Layout.preferredHeight: 20
+                        color: ConfigService.surfaceHover
+                    }
+
                     RowLayout {
-                        spacing: 6
+                        spacing: 5
                         Repeater {
                             model: NiriService.workspaces
                             delegate: Rectangle {
-                                width: 28
-                                height: 28
-                                radius: 8
-                                color: modelData.is_active ? ConfigService.accent : (wsMouse.containsMouse ? ConfigService.surface : "transparent")
+                                Layout.preferredWidth: modelData.is_active ? 34 : 30
+                                Layout.preferredHeight: 30
+                                radius: 15
+                                color: modelData.is_active ? ConfigService.accent : (wsMouse.containsMouse ? ConfigService.surfaceHover : ConfigService.surface)
                                 border.width: 1
                                 border.color: modelData.is_active ? ConfigService.accentBorder : ConfigService.surfaceHover
 
-                                Behavior on color {
-                                    ColorAnimation { duration: 150 }
-                                }
+                                Behavior on color { ColorAnimation { duration: 120 } }
+                                Behavior on Layout.preferredWidth { NumberAnimation { duration: 120 } }
 
                                 Text {
                                     anchors.centerIn: parent
                                     text: modelData.idx
-                                    font.family: ConfigService.fontFamily
-                                    font.pixelSize: 12
-                                    font.bold: true
                                     color: modelData.is_active ? ConfigService.background : ConfigService.text
+                                    font.family: ConfigService.fontFamily
+                                    font.pixelSize: 11
+                                    font.bold: true
                                 }
 
                                 MouseArea {
@@ -98,77 +101,88 @@ Scope {
                     }
 
                     Process { id: wsProcess }
-
                     Item { Layout.fillWidth: true }
 
-                    // Relógio central
                     Rectangle {
-                        Layout.preferredWidth: 120
+                        Layout.preferredWidth: 126
                         Layout.preferredHeight: 30
+                        radius: 15
                         color: ConfigService.surface
-                        radius: 10
                         border.width: 1
                         border.color: ConfigService.peach
 
-                        Text {
+                        Row {
                             anchors.centerIn: parent
-                            text: Qt.formatTime(new Date(), "hh:mm:ss")
-                            font.family: ConfigService.fontFamily
-                            font.pixelSize: 12
-                            font.bold: true
-                            color: ConfigService.peach
-
+                            spacing: 8
+                            Text {
+                                text: "✦"
+                                color: ConfigService.peach
+                                font.pixelSize: 12
+                            }
+                            Text {
+                                id: clockText
+                                text: Qt.formatTime(new Date(), "hh:mm")
+                                color: ConfigService.peach
+                                font.family: ConfigService.fontFamily
+                                font.pixelSize: 12
+                                font.bold: true
+                            }
                             Timer {
                                 interval: 1000
                                 running: true
                                 repeat: true
-                                onTriggered: parent.text = Qt.formatTime(new Date(), "hh:mm:ss")
+                                onTriggered: clockText.text = Qt.formatTime(new Date(), "hh:mm")
                             }
                         }
                     }
 
                     Item { Layout.fillWidth: true }
 
-                    // Status (Áudio, Bateria e Rede)
-                    RowLayout {
-                        spacing: 12
+                    NoctaliaRailModule {
+                        compactWidth: 42
+                        expandedWidth: 112
+                        icon: AudioService.muted ? "󰝟" : "󰕾"
+                        value: AudioService.volume + "%"
+                        details: AudioService.muted ? "MUTED" : "VOL " + AudioService.volume + "%"
+                        accentColor: AudioService.muted ? ConfigService.red : ConfigService.blue
+                        onClicked: AudioService.toggleMute()
+                    }
 
-                        // Audio button
-                        NoctuaButton {
-                            width: 65
-                            height: 28
-                            icon: AudioService.muted ? "󰝟" : "󰕾"
-                            text: AudioService.volume + "%"
-                            baseColor: ConfigService.surface
-                            textColor: AudioService.muted ? ConfigService.red : ConfigService.text
-                            radius: 8
-                            onClicked: AudioService.toggleMute()
-                        }
+                    NoctaliaRailModule {
+                        compactWidth: 42
+                        expandedWidth: 116
+                        icon: "󰘚"
+                        value: SystemMonitorService.cpuUsage + "%"
+                        details: "CPU " + SystemMonitorService.cpuUsage + "%"
+                        accentColor: ConfigService.peach
+                    }
 
-                        // Battery indicator
-                        NoctuaButton {
-                            width: 65
-                            height: 28
-                            visible: BatteryService.hasBattery
-                            icon: "󰁹"
-                            text: BatteryService.capacity + "%"
-                            baseColor: ConfigService.surface
-                            textColor: ConfigService.text
-                            radius: 8
-                            hoverEffect: false
-                        }
+                    NoctaliaRailModule {
+                        compactWidth: 42
+                        expandedWidth: 116
+                        icon: "󰍛"
+                        value: SystemMonitorService.ramUsage + "%"
+                        details: "RAM " + SystemMonitorService.ramUsage + "%"
+                        accentColor: ConfigService.accent
+                    }
 
-                        // Network indicator
-                        NoctuaButton {
-                            width: 75
-                            height: 28
-                            icon: "󰖩"
-                            text: NetworkService.connectionType
-                            baseColor: ConfigService.surface
-                            textColor: ConfigService.green
-                            radius: 8
-                            hoverEffect: false
-                        }
+                    NoctaliaRailModule {
+                        compactWidth: 42
+                        expandedWidth: 112
+                        visible: BatteryService.hasBattery
+                        icon: "󰁹"
+                        value: BatteryService.capacity + "%"
+                        details: "BAT " + BatteryService.capacity + "%"
+                        accentColor: ConfigService.green
+                    }
+
+                    NoctaliaRailModule {
+                        compactWidth: 42
+                        expandedWidth: 122
+                        icon: NetworkService.connected ? "󰖩" : "󰖪"
+                        value: ""
+                        details: NetworkService.connectionType.toUpperCase()
+                        accentColor: NetworkService.connected ? ConfigService.green : ConfigService.red
                     }
                 }
             }
