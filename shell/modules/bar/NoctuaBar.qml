@@ -72,8 +72,61 @@ Scope {
                     }
                 }
 
+                Item {
+                    id: starfield
+                    anchors.fill: parent
+                    clip: true
+                    z: 0
+
+                    property var dots: [
+                        [7, 10, 1.1], [14, 29, 0.8], [25, 17, 0.7], [33, 35, 1.0],
+                        [43, 8, 0.7], [57, 30, 0.9], [68, 15, 0.8], [79, 35, 0.7],
+                        [88, 9, 1.0], [96, 26, 0.8], [6, 37, 0.6], [74, 6, 0.6]
+                    ]
+
+                    Repeater {
+                        model: starfield.dots
+                        delegate: Rectangle {
+                            x: modelData[0] / 100 * starfield.width
+                            y: modelData[1]
+                            width: modelData[2] * 2
+                            height: width
+                            radius: width / 2
+                            color: ConfigService.waveHighlight
+                            opacity: 0.28
+                            z: 0
+                            SequentialAnimation on opacity {
+                                loops: Animation.Infinite
+                                PauseAnimation { duration: 900 + index * 170 }
+                                NumberAnimation { to: 0.82; duration: 650 }
+                                NumberAnimation { to: 0.28; duration: 900 }
+                            }
+                        }
+                    }
+
+                    Repeater {
+                        model: [18, 52, 84]
+                        delegate: Text {
+                            x: modelData / 100 * starfield.width - 5
+                            y: index % 2 === 0 ? 5 : 25
+                            text: "✦"
+                            color: index === 1 ? ConfigService.accentBorder : ConfigService.waveColor
+                            font.pixelSize: index === 1 ? 10 : 7
+                            opacity: 0.34
+                            z: 1
+                            SequentialAnimation on opacity {
+                                loops: Animation.Infinite
+                                PauseAnimation { duration: 1200 + index * 300 }
+                                NumberAnimation { to: 0.9; duration: 700 }
+                                NumberAnimation { to: 0.34; duration: 1000 }
+                            }
+                        }
+                    }
+                }
+
                 RowLayout {
                     anchors.fill: parent
+                    z: 2
                     anchors.leftMargin: 10
                     anchors.rightMargin: 10
                     spacing: 8
