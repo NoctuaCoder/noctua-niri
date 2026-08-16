@@ -1,26 +1,28 @@
 {
   "theme": {
-    "name": "Seigaiha · Noctua Original",
-    "background": "#27153D",
-    "surface": "#355B67",
-    "surface_hover": "#4E7D85",
-    "text": "#F6FFFA",
-    "subtext": "#D8E6E8",
-    "accent": "#A6C9B6",
-    "accent_border": "#F6B6B7",
-    "blue": "#B6AAC7",
-    "peach": "#F6B6B7",
-    "green": "#A6C9B6",
-    "red": "#D48D95",
-    "palette_mode": "original",
-    "wave_color": "#A6C9B6",
-    "wave_highlight": "#F6FFFA",
-    "wave_opacity": 0.24
+    "name": "Celestial Night · Noctua Prime",
+    "background": "#0A1026",
+    "surface": "#142B52",
+    "surface_hover": "#254A7A",
+    "text": "#F8F6EE",
+    "subtext": "#A6ADC8",
+    "accent": "#D4B06A",
+    "accent_border": "#D4B06A",
+    "blue": "#89B4FA",
+    "peach": "#FAB387",
+    "green": "#A6E3A1",
+    "red": "#F38BA8",
+    "mauve": "#CBA6F7",
+    "palette_mode": "celestial",
+    "nebula_color": "#254A7A",
+    "nebula_highlight": "#D4B06A",
+    "nebula_opacity": 0.15
   },
   "shell": {
-    "opacity": 0.90,
-    "radius": 16,
+    "opacity": 0.95,
+    "radius": 12,
     "blur": true,
-    "fontFamily": "JetBrainsMono Nerd Font"
+    "fontFamily": "Arial",
+    "fontFamilySerif": "Georgia"
   }
 }
