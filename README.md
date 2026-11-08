@@ -34,3 +34,4 @@ chmod +x install.sh
 
 Distribuído sob a licença MIT. Veja o arquivo `LICENSE` para mais detalhes.
 
+<!-- noctua-niri dotfiles -->
